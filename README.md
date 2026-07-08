@@ -2,7 +2,6 @@
 
 [![Tests](https://github.com/HanZawNyein/odoo_developer_kit/actions/workflows/test.yml/badge.svg)](https://github.com/HanZawNyein/odoo_developer_kit/actions/workflows/test.yml)
 [![Docs](https://github.com/HanZawNyein/odoo_developer_kit/actions/workflows/docs.yml/badge.svg)](https://hanzawnyein.github.io/odoo_developer_kit/)
-[![Crates.io](https://img.shields.io/crates/v/odoo-developer-kit.svg)](https://crates.io/crates/odoo-developer-kit)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 Odoo Developer Kit (`odk`) is a Flutter-like developer toolkit for building professional Odoo development environments.
@@ -27,20 +26,20 @@ ODK is a Rust CLI that helps Odoo developers bootstrap and validate local develo
 - PyCharm run configuration generation
 - VS Code launch configuration generation
 - Cross-platform support for macOS, Linux, and Windows
-- Binary releases with `cargo-dist`
+- Release automation with `cargo-dist`
 
 ## Installation
 
-Install from GitHub:
+Install the latest source from GitHub:
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/HanZawNyein/odoo_developer_kit/refs/heads/1.0/install.sh | sh
+cargo install --git https://github.com/HanZawNyein/odoo_developer_kit.git --locked
 ```
 
-Install with Cargo:
+Install from a local checkout:
 
 ```bash
-cargo install odoo-developer-kit
+cargo install --path . --locked
 ```
 
 Verify:
@@ -48,6 +47,8 @@ Verify:
 ```bash
 odk doctor
 ```
+
+The GitHub release installer and `cargo install odoo-developer-kit` will be available after the first GitHub Release and crates.io publish.
 
 ## Usage
 
