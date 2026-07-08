@@ -39,9 +39,10 @@ fn renders_odoo_conf_template() {
         .render_to_string("odoo.conf.tera", &sample_config())
         .expect("template should render");
 
-    assert!(rendered.contains("addons_path = /mnt/extra-addons"));
-    assert!(rendered.contains("data_dir = /var/lib/odoo"));
-    assert!(rendered.contains("db_host = db"));
+    assert_eq!(
+        rendered,
+        "[options]\naddons_path = /mnt/extra-addons\nadmin_passwd = admin\n"
+    );
 }
 
 #[test]
