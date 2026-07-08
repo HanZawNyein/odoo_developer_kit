@@ -1,9 +1,9 @@
 # Publishing Documentation
 
-ODK uses Material for MkDocs for documentation. The current repository workflow validates documentation on pull requests with:
+ODK uses Material for MkDocs for documentation. The current repository workflow publishes documentation on pushes to `1.0` and `main` with:
 
 ```bash
-mkdocs build --strict
+mkdocs gh-deploy --force
 ```
 
 This keeps documentation changes reviewable before they are merged.
@@ -22,21 +22,24 @@ The matching `mkdocs.yml` setting is:
 site_url: https://hanzawnyein.github.io/odoo_developer_kit/
 ```
 
-## PR Validation Workflow
+## Active GitHub Pages Workflow
 
-The active workflow runs only on pull requests:
+The active workflow runs only on pushes:
 
 ```yaml
 name: Docs
 
 on:
-  pull_request:
+  push:
+    branches:
+      - "1.0"
+      - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -48,16 +51,24 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install documentation dependencies
-        run: python -m pip install mkdocs mkdocs-material
+      - name: Cache MkDocs
+        uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ github.run_id }}
+          path: ~/.cache
+          restore-keys: |
+            mkdocs-material-
 
-      - name: Build docs
-        run: mkdocs build --strict
+      - name: Install documentation dependencies
+        run: python -m pip install mkdocs-material
+
+      - name: Deploy documentation
+        run: mkdocs gh-deploy --force
 ```
 
 ## GitHub Pages Publishing Example
 
-Material for MkDocs documents a simple GitHub Actions deployment flow using `mkdocs gh-deploy --force`. Enable a separate publishing workflow like this when you are ready to publish docs from the default branch:
+Material for MkDocs documents a simple GitHub Actions deployment flow using `mkdocs gh-deploy --force`. This is the same approach used by ODK:
 
 ```yaml
 name: Publish Docs
