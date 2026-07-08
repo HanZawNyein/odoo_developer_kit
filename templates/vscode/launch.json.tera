@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Odoo",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/odoo-bin",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "-c",
+        "odoo.conf"
+      ]
+    }
+  ]
+}

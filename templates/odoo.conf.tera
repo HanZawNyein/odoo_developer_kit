@@ -1,0 +1,10 @@
+[options]
+addons_path = addons,custom
+admin_passwd = admin
+data_dir = .odoo-data
+db_host = {% if use_docker %}db{% else %}localhost{% endif %}
+db_port = 5432
+db_user = odoo
+db_password = odoo
+http_port = 8069
+log_level = info

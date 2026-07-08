@@ -1,0 +1,25 @@
+# {{ project_name }}
+
+Odoo {{ odoo_version }} development project generated with Odoo Developer Kit.
+
+## Environment
+
+- Python: {{ python_version }}
+- PostgreSQL: {{ postgres_version }}
+- Database: {{ database_name }}
+
+## Setup
+
+```bash
+uv python install {{ python_version }}
+uv venv .venv --python {{ python_version }}
+uv lock
+```
+
+{% if use_docker %}
+## Docker
+
+```bash
+docker compose up --build
+```
+{% endif %}

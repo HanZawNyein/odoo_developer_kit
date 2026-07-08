@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Odoo" type="PythonConfigurationType" factoryName="Python">
+    <module name="{{ project_name }}" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
+    <option name="SDK_HOME" value="$PROJECT_DIR$/.venv/bin/python" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/odoo-bin" />
+    <option name="PARAMETERS" value="-c odoo.conf" />
+    <method v="2" />
+  </configuration>
+</component>
