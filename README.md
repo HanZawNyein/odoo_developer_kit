@@ -71,7 +71,6 @@ odk create
 Checks:
 
 - `uv`
-- Python
 - PyCharm
 - VS Code
 - PostgreSQL
@@ -84,9 +83,6 @@ Odoo Developer Kit Doctor
 
 [✓] uv
     Version: 0.8.4
-
-[✓] Python
-    Version: 3.13.5
 
 [✓] PyCharm
     Version: 2026.1
@@ -117,16 +113,19 @@ Git Repository:
 > git@github.com:company/template.git
 
 Odoo Version:
-  19.0
+  19.0 (default)
   18.0
   17.0
 > 19.0
 
 Python Version:
-  3.13
-  3.12
+  3.8
+  3.9
+  3.10
   3.11
-> 3.13
+  3.12
+  3.13
+> 3.10
 ```
 
 ODK then:

@@ -14,11 +14,8 @@ pub enum OdkError {
         stderr: String,
     },
 
-    #[error(
-        "invalid Python version `{python_version}` for Odoo `{odoo_version}`; supported versions: {supported}"
-    )]
+    #[error("invalid Python version `{python_version}`; supported versions: {supported}")]
     InvalidPythonVersion {
-        odoo_version: String,
         python_version: String,
         supported: String,
     },

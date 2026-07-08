@@ -18,10 +18,11 @@ fn sample_config() -> ProjectConfig {
 }
 
 #[test]
-fn validates_odoo_python_matrix() {
-    assert!(validate_python_version("19.0", "3.13").is_ok());
-    assert!(validate_python_version("19.0", "3.11").is_err());
-    assert!(validate_python_version("18.0", "3.12").is_ok());
+fn validates_supported_python_versions() {
+    assert!(validate_python_version("3.8").is_ok());
+    assert!(validate_python_version("3.10").is_ok());
+    assert!(validate_python_version("3.13").is_ok());
+    assert!(validate_python_version("3.7").is_err());
 }
 
 #[test]

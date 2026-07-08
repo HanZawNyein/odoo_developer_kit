@@ -45,12 +45,24 @@ pub fn install_suggestion(tool: &str, platform: Platform) -> &'static str {
         ("VS Code", Platform::MacOs) => "brew install --cask visual-studio-code",
         ("VS Code", Platform::Linux) => "Install VS Code from https://code.visualstudio.com/",
         ("VS Code", Platform::Windows) => "winget install Microsoft.VisualStudioCode",
-        ("PostgreSQL", Platform::MacOs) => "brew install postgresql@17",
-        ("PostgreSQL", Platform::Linux) => "sudo apt install postgresql postgresql-client",
-        ("PostgreSQL", Platform::Windows) => "winget install PostgreSQL.PostgreSQL",
-        ("wkhtmltopdf", Platform::MacOs) => "brew install wkhtmltopdf",
-        ("wkhtmltopdf", Platform::Linux) => "sudo apt install wkhtmltopdf",
-        ("wkhtmltopdf", Platform::Windows) => "winget install wkhtmltopdf",
+        ("PostgreSQL", Platform::MacOs) => {
+            "Download PostgreSQL from https://www.postgresql.org/download/"
+        }
+        ("PostgreSQL", Platform::Linux) => {
+            "Download PostgreSQL from https://www.postgresql.org/download/"
+        }
+        ("PostgreSQL", Platform::Windows) => {
+            "Download PostgreSQL from https://www.postgresql.org/download/"
+        }
+        ("wkhtmltopdf", Platform::MacOs) => {
+            "Download wkhtmltopdf from https://wkhtmltopdf.org/downloads.html"
+        }
+        ("wkhtmltopdf", Platform::Linux) => {
+            "Download wkhtmltopdf from https://wkhtmltopdf.org/downloads.html"
+        }
+        ("wkhtmltopdf", Platform::Windows) => {
+            "Download wkhtmltopdf from https://wkhtmltopdf.org/downloads.html"
+        }
         _ => "Install the missing tool and rerun `odk doctor`",
     }
 }

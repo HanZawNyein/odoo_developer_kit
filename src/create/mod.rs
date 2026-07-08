@@ -10,6 +10,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::OdkError;
 
+const ODOO_VERSIONS: &[&str] = &["19.0", "18.0", "17.0"];
+const PYTHON_VERSIONS: &[&str] = &["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"];
+const POSTGRES_VERSIONS: &[&str] = &["17", "16"];
+const DEFAULT_ODOO_VERSION: &str = "19.0";
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ProjectConfig {
     pub project_name: String,
@@ -37,7 +42,7 @@ pub struct ProjectOptions {
 
 impl ProjectConfig {
     pub fn from_options(options: ProjectOptions) -> Result<Self, OdkError> {
-        validate_python_version(&options.odoo_version, &options.python_version)?;
+        validate_python_version(&options.python_version)?;
         let database_name = database_name_from_project(&options.project_name);
 
         Ok(Self {
@@ -73,9 +78,10 @@ pub fn run() -> AnyhowResult<()> {
 pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let project_name = prompt_required("Project Name")?;
     let git_repository = prompt_required("Git Repository")?;
-    let odoo_version = prompt_choice("Odoo Version", &["19.0", "18.0", "17.0"])?;
-    let python_version = prompt_choice("Python Version", &["3.13", "3.12", "3.11"])?;
-    let postgres_version = prompt_choice("PostgreSQL Version", &["17", "16"])?;
+    let odoo_version =
+        prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)?;
+    let python_version = prompt_choice("Python Version", PYTHON_VERSIONS)?;
+    let postgres_version = prompt_choice("PostgreSQL Version", POSTGRES_VERSIONS)?;
     let use_docker = prompt_yes_no("Use Docker")?;
     let generate_pycharm = prompt_yes_no("Generate PyCharm")?;
     let generate_vscode = prompt_yes_no("Generate VS Code")?;
@@ -94,26 +100,20 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     Ok(config)
 }
 
-pub fn validate_python_version(odoo_version: &str, python_version: &str) -> Result<(), OdkError> {
-    let supported = supported_python_versions(odoo_version);
+pub fn validate_python_version(python_version: &str) -> Result<(), OdkError> {
+    let supported = supported_python_versions();
     if supported.contains(&python_version) {
         return Ok(());
     }
 
     Err(OdkError::InvalidPythonVersion {
-        odoo_version: odoo_version.to_owned(),
         python_version: python_version.to_owned(),
         supported: supported.join(", "),
     })
 }
 
-pub fn supported_python_versions(odoo_version: &str) -> &'static [&'static str] {
-    match odoo_version {
-        "19.0" => &["3.12", "3.13"],
-        "18.0" => &["3.11", "3.12"],
-        "17.0" => &["3.11"],
-        _ => &[],
-    }
+pub fn supported_python_versions() -> &'static [&'static str] {
+    PYTHON_VERSIONS
 }
 
 pub fn database_name_from_project(project_name: &str) -> String {
@@ -158,10 +158,31 @@ fn prompt_required(label: &str) -> AnyhowResult<String> {
 }
 
 fn prompt_choice(label: &str, choices: &[&str]) -> AnyhowResult<String> {
+    prompt_choice_inner(label, choices, None)
+}
+
+fn prompt_choice_with_default(
+    label: &str,
+    choices: &[&str],
+    default: &str,
+) -> AnyhowResult<String> {
+    debug_assert!(choices.contains(&default));
+    prompt_choice_inner(label, choices, Some(default))
+}
+
+fn prompt_choice_inner(
+    label: &str,
+    choices: &[&str],
+    default: Option<&str>,
+) -> AnyhowResult<String> {
     loop {
         println!("{label}:");
         for choice in choices {
-            println!("  {choice}");
+            if Some(*choice) == default {
+                println!("  {choice} (default)");
+            } else {
+                println!("  {choice}");
+            }
         }
         print!("> ");
         io::stdout().flush()?;
@@ -169,6 +190,13 @@ fn prompt_choice(label: &str, choices: &[&str]) -> AnyhowResult<String> {
         let mut input = String::new();
         io::stdin().read_line(&mut input)?;
         let value = input.trim();
+
+        if value.is_empty()
+            && let Some(default) = default
+        {
+            println!();
+            return Ok(default.to_owned());
+        }
 
         if choices.contains(&value) {
             println!();
@@ -214,15 +242,18 @@ mod tests {
 
     #[test]
     fn validates_python_compatibility() {
-        assert!(validate_python_version("19.0", "3.13").is_ok());
-        assert!(validate_python_version("18.0", "3.11").is_ok());
-        assert!(validate_python_version("19.0", "3.11").is_err());
+        assert!(validate_python_version("3.8").is_ok());
+        assert!(validate_python_version("3.10").is_ok());
+        assert!(validate_python_version("3.13").is_ok());
+        assert!(validate_python_version("3.7").is_err());
     }
 
     #[test]
     fn exposes_supported_python_versions() {
-        assert_eq!(supported_python_versions("19.0"), &["3.12", "3.13"]);
-        assert_eq!(supported_python_versions("18.0"), &["3.11", "3.12"]);
+        assert_eq!(
+            supported_python_versions(),
+            &["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        );
     }
 
     #[test]

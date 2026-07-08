@@ -1,6 +1,5 @@
 pub mod postgres;
 pub mod pycharm;
-pub mod python;
 pub mod uv;
 pub mod vscode;
 pub mod wkhtmltopdf;
@@ -55,7 +54,6 @@ pub fn run() -> Result<()> {
 pub fn run_checks(platform: Platform) -> Vec<CheckResult> {
     vec![
         uv::check(platform),
-        python::check(platform),
         pycharm::check(platform),
         vscode::check(platform),
         postgres::check(platform),
