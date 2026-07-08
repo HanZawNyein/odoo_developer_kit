@@ -1,58 +1,129 @@
 # `odk create`
 
-`odk create` runs an interactive Odoo project generator.
+`odk create` is an interactive project generator for Odoo development repositories.
 
 ```bash
 odk create
 ```
 
-## Interactive Workflow
+## Interactive Flow
 
-The generator asks for:
+The generator asks for the values that shape the project:
 
-- Project Name
-- Git Repository
-- Odoo Version
-- Python Version
-- PostgreSQL Version
-- Use Docker
-- Generate PyCharm
-- Generate VS Code
+1. Project Name
+2. Git Repository
+3. Odoo Version
+4. Python Version
+5. PostgreSQL Version
+6. Use Docker
+7. Generate PyCharm
+8. Generate VS Code
 
-Supported choices:
+```text
+Odoo Project Creator
 
-| Odoo Version | Python Versions |
+Project Name:
+> geaai_odoo
+
+Git Repository:
+> git@github.com:company/template.git
+
+Odoo Version:
+  19.0
+  18.0
+  17.0
+> 19.0
+
+Python Version:
+  3.13
+  3.12
+  3.11
+> 3.13
+```
+
+## Workflow
+
+ODK performs the setup in a deterministic order:
+
+```mermaid
+flowchart LR
+    A[Collect answers] --> B[Validate Python compatibility]
+    B --> C[Clone repository]
+    C --> D[Install Python with uv]
+    D --> E[Create .venv with uv]
+    E --> F[Render Tera templates]
+    F --> G[Generate uv.lock]
+```
+
+The environment is always created with `uv`:
+
+```bash
+uv python install <version>
+uv venv .venv --python <version>
+```
+
+!!! warning "No `python -m venv`"
+    ODK deliberately avoids `python -m venv` so teams get one consistent Python environment workflow.
+
+## Compatibility Matrix
+
+| Odoo Version | Supported Python Versions |
 | --- | --- |
 | 19.0 | 3.12, 3.13 |
 | 18.0 | 3.11, 3.12 |
 | 17.0 | 3.11 |
 
-If the selected Python version is not compatible with the selected Odoo
-version, ODK exits with a friendly error before cloning or generating files.
+Invalid combinations fail before cloning or generating files.
 
-## Workflow
+## Generated Project Structure
 
-ODK performs these steps:
-
-1. Clone the repository with `git clone`.
-2. Install Python with `uv python install <version>`.
-3. Create `.venv` with `uv venv .venv --python <version>`.
-4. Create `addons/`, `custom/`, `docker/`, and `scripts/`.
-5. Render project files from Tera templates.
-6. Render PyCharm and VS Code configuration when selected.
-7. Generate `uv.lock`.
-
-ODK never uses `python -m venv`.
+```text
+project/
+├── .venv/
+├── addons/
+├── custom/
+├── docker/
+├── scripts/
+├── .idea/
+├── .vscode/
+├── compose.yaml
+├── Dockerfile
+├── .env
+├── .gitignore
+├── odoo.conf
+├── README.md
+├── pyproject.toml
+└── uv.lock
+```
 
 ## Template Variables
 
-Templates receive:
+Every generated file is rendered with Tera. Templates receive:
 
-- `project_name`
-- `odoo_version`
-- `python_version`
-- `postgres_version`
-- `database_name`
+| Variable | Description |
+| --- | --- |
+| `project_name` | Project directory and package name |
+| `odoo_version` | Selected Odoo version |
+| `python_version` | Selected Python version |
+| `postgres_version` | Selected PostgreSQL version |
+| `database_name` | PostgreSQL-safe database name derived from the project name |
 
-The database name is derived from the project name and normalized for
-PostgreSQL.
+## Editor Configuration
+
+When selected, ODK generates editor configuration that points to `.venv`.
+
+=== "PyCharm"
+
+    ```text
+    Script: odoo-bin
+    Arguments: -c odoo.conf
+    Interpreter: .venv
+    ```
+
+=== "VS Code"
+
+    ```json
+    {
+      "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+    }
+    ```

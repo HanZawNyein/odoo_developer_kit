@@ -1,24 +1,95 @@
 site_name: Odoo Developer Kit
-site_description: A Flutter-like developer toolkit for Odoo developers.
+site_description: A Flutter-like developer toolkit for professional Odoo development environments.
 site_url: https://odoo-developer-kit.github.io/odoo-developer-kit/
 repo_url: https://github.com/odoo-developer-kit/odoo-developer-kit
 repo_name: odoo-developer-kit/odoo-developer-kit
+edit_uri: edit/main/docs/
 
 theme:
   name: material
+  language: en
+  logo: material/tools
+  favicon: material/tools
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
   features:
-    - navigation.sections
-    - navigation.instant
+    - announce.dismiss
+    - content.action.edit
+    - content.code.annotate
     - content.code.copy
+    - content.tabs.link
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
 
 nav:
-  - Home: index.md
+  - Overview: index.md
   - Installation: installation.md
-  - Doctor: doctor.md
-  - Create: create.md
+  - Commands:
+      - Doctor: doctor.md
+      - Create: create.md
+
+plugins:
+  - search
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - tables
   - toc:
       permalink: true
-  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/odoo-developer-kit/odoo-developer-kit
+      name: ODK on GitHub
+
+copyright: Copyright &copy; 2026 Odoo Developer Kit Contributors

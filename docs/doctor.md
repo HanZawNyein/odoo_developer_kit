@@ -1,40 +1,25 @@
 # `odk doctor`
 
-`odk doctor` checks the local Odoo development environment.
+`odk doctor` validates the local Odoo developer environment and prints friendly, actionable output.
 
 ```bash
 odk doctor
 ```
 
-## Checks
+## What It Checks
 
-ODK checks only these tools:
+ODK checks only the tools that are part of the supported Odoo workflow.
 
-- `uv`
-- Python
-- PyCharm
-- VS Code
-- PostgreSQL
-- `wkhtmltopdf`
+| Tool | Detection |
+| --- | --- |
+| `uv` | `uv --version` |
+| Python | `python --version`, then `python3 --version` |
+| PyCharm | platform-specific app or command detection |
+| VS Code | `code --version` |
+| PostgreSQL | `psql --version` |
+| `wkhtmltopdf` | `wkhtmltopdf --version` |
 
-## Detection
-
-ODK uses system commands such as:
-
-- `uv --version`
-- `python --version`
-- `python3 --version`
-- `code --version`
-- `psql --version`
-- `wkhtmltopdf --version`
-
-PyCharm detection is platform-specific:
-
-- macOS: scans `/Applications/PyCharm*.app` and `~/Applications/PyCharm*.app`
-- Linux: checks `pycharm` and `which pycharm`
-- Windows: scans common Program Files JetBrains locations
-
-## Example Output
+## Example: Ready Environment
 
 ```text
 Odoo Developer Kit Doctor
@@ -59,3 +44,32 @@ Odoo Developer Kit Doctor
 
 Environment ready!
 ```
+
+## Example: Missing Tool
+
+```text
+[✗] wkhtmltopdf
+    Not installed
+
+Suggestion:
+    brew install wkhtmltopdf
+```
+
+!!! info "No hard crash"
+    Missing commands are handled as normal diagnostic results. ODK never panics because a tool is absent from the machine.
+
+## PyCharm Detection
+
+PyCharm requires platform-specific handling:
+
+- macOS scans `/Applications/PyCharm*.app` and `~/Applications/PyCharm*.app`
+- Linux checks the `pycharm` command and `which pycharm`
+- Windows scans common JetBrains locations under Program Files
+
+## Supported Platforms
+
+| OS | Status |
+| --- | --- |
+| macOS | Supported |
+| Linux | Supported |
+| Windows | Supported |
