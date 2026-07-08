@@ -5,7 +5,7 @@ ODK can be installed from a prebuilt release binary or from Cargo. The release i
 ## Recommended Installer
 
 ```bash
-curl -LsSf https://odk.dev/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/HanZawNyein/odoo_developer_kit/refs/heads/1.0/install.sh | sh
 ```
 
 The installer:
@@ -45,13 +45,22 @@ ODK publishes binaries for the platforms below.
 | Linux | ARM64 | `aarch64-unknown-linux-gnu` |
 | Windows | x64 | `x86_64-pc-windows-msvc` |
 
-Download the archive for your platform from GitHub Releases, extract the `odk` binary, and place it on your `PATH`.
+Download the archive for your platform from [GitHub Releases](https://github.com/HanZawNyein/odoo_developer_kit/releases), extract the `odk` binary, and place it on your `PATH`.
+
+!!! warning "404 from the installer"
+    The installer downloads from GitHub Releases, not from the raw branch. If no release has been published yet, GitHub returns `404`.
+
+    Create a version tag such as `v0.1.0` and let the release workflow publish the cargo-dist assets first. The macOS ARM64 asset should look like:
+
+    ```text
+    https://github.com/HanZawNyein/odoo_developer_kit/releases/latest/download/odoo-developer-kit-aarch64-apple-darwin.tar.xz
+    ```
 
 ## Build From Source
 
 ```bash
-git clone https://github.com/odoo-developer-kit/odoo-developer-kit.git
-cd odoo-developer-kit
+git clone https://github.com/HanZawNyein/odoo_developer_kit.git
+cd odoo_developer_kit
 cargo build --release
 ```
 

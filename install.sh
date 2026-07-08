@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-REPO="${ODK_REPO:-odoo-developer-kit/odoo-developer-kit}"
+REPO="${ODK_REPO:-HanZawNyein/odoo_developer_kit}"
 INSTALL_DIR="${ODK_INSTALL_DIR:-$HOME/.local/bin}"
 BIN_NAME="odk"
 PACKAGE_NAME="odoo-developer-kit"

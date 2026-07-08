@@ -1,7 +1,7 @@
 # Odoo Developer Kit (ODK)
 
-[![Tests](https://github.com/odoo-developer-kit/odoo-developer-kit/actions/workflows/test.yml/badge.svg)](https://github.com/odoo-developer-kit/odoo-developer-kit/actions/workflows/test.yml)
-[![Docs](https://github.com/odoo-developer-kit/odoo-developer-kit/actions/workflows/docs.yml/badge.svg)](https://odoo-developer-kit.github.io/odoo-developer-kit/)
+[![Tests](https://github.com/HanZawNyein/odoo_developer_kit/actions/workflows/test.yml/badge.svg)](https://github.com/HanZawNyein/odoo_developer_kit/actions/workflows/test.yml)
+[![Docs](https://github.com/HanZawNyein/odoo_developer_kit/actions/workflows/docs.yml/badge.svg)](https://hanzawnyein.github.io/odoo_developer_kit/)
 [![Crates.io](https://img.shields.io/crates/v/odoo-developer-kit.svg)](https://crates.io/crates/odoo-developer-kit)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
@@ -31,10 +31,10 @@ ODK is a Rust CLI that helps Odoo developers bootstrap and validate local develo
 
 ## Installation
 
-Install from the official installer:
+Install from GitHub:
 
 ```bash
-curl -LsSf https://odk.dev/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/HanZawNyein/odoo_developer_kit/refs/heads/1.0/install.sh | sh
 ```
 
 Install with Cargo:
@@ -171,8 +171,8 @@ project/
 Clone:
 
 ```bash
-git clone https://github.com/odoo-developer-kit/odoo-developer-kit.git
-cd odoo-developer-kit
+git clone https://github.com/HanZawNyein/odoo_developer_kit.git
+cd odoo_developer_kit
 ```
 
 Run tests:

@@ -1,8 +1,8 @@
 site_name: Odoo Developer Kit
 site_description: A Flutter-like developer toolkit for professional Odoo development environments.
-site_url: https://odoo-developer-kit.github.io/odoo-developer-kit/
-repo_url: https://github.com/odoo-developer-kit/odoo-developer-kit
-repo_name: odoo-developer-kit/odoo-developer-kit
+site_url: https://hanzawnyein.github.io/odoo_developer_kit/
+repo_url: https://github.com/HanZawNyein/odoo_developer_kit
+repo_name: HanZawNyein/odoo_developer_kit
 edit_uri: edit/main/docs/
 
 theme:
@@ -56,6 +56,7 @@ nav:
       - Doctor: doctor.md
       - Create: create.md
   - Release: release.md
+  - Publishing: publishing.md
 
 plugins:
   - search
@@ -90,7 +91,7 @@ extra:
   generator: false
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/odoo-developer-kit/odoo-developer-kit
+      link: https://github.com/HanZawNyein/odoo_developer_kit
       name: ODK on GitHub
 
 copyright: Copyright &copy; 2026 Odoo Developer Kit Contributors

@@ -65,7 +65,7 @@ Environment ready!</code></pre>
 Install ODK:
 
 ```bash
-curl -LsSf https://odk.dev/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/HanZawNyein/odoo_developer_kit/refs/heads/1.0/install.sh | sh
 ```
 
 Check the machine:
