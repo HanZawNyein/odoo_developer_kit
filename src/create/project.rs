@@ -12,7 +12,7 @@ use crate::error::OdkError;
 use crate::utils::command::run_required;
 
 pub fn create_project(config: &ProjectConfig) -> Result<PathBuf> {
-    let target = PathBuf::from(&config.project_name);
+    let target = PathBuf::from(&config.project_path);
     ensure_target_is_available(&target)?;
 
     run_step("Cloning repository", || {
@@ -78,6 +78,13 @@ fn ensure_target_is_available(target: &Path) -> Result<(), OdkError> {
             return Err(OdkError::NonEmptyTarget(target.to_path_buf()));
         }
     }
+
+    if let Some(parent) = target.parent()
+        && !parent.as_os_str().is_empty()
+    {
+        fs::create_dir_all(parent)?;
+    }
+
     Ok(())
 }
 

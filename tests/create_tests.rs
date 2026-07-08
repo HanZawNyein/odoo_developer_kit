@@ -6,6 +6,7 @@ use odoo_developer_kit::create::{
 fn sample_config() -> ProjectConfig {
     ProjectConfig::from_options(ProjectOptions {
         project_name: "geaai_odoo".to_owned(),
+        project_path: "/Users/agga/Documents/python-dev/odoo-dev/sample".to_owned(),
         git_repository: "git@github.com:company/template.git".to_owned(),
         odoo_version: "19.0".to_owned(),
         python_version: "3.13".to_owned(),

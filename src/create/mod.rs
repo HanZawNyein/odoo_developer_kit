@@ -18,6 +18,7 @@ const DEFAULT_ODOO_VERSION: &str = "19.0";
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ProjectConfig {
     pub project_name: String,
+    pub project_path: String,
     pub git_repository: String,
     pub odoo_version: String,
     pub python_version: String,
@@ -31,6 +32,7 @@ pub struct ProjectConfig {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProjectOptions {
     pub project_name: String,
+    pub project_path: String,
     pub git_repository: String,
     pub odoo_version: String,
     pub python_version: String,
@@ -44,9 +46,11 @@ impl ProjectConfig {
     pub fn from_options(options: ProjectOptions) -> Result<Self, OdkError> {
         validate_python_version(&options.python_version)?;
         let database_name = database_name_from_project(&options.project_name);
+        let project_path = project_path_from_input(&options.project_path, &options.project_name);
 
         Ok(Self {
             project_name: options.project_name,
+            project_path,
             git_repository: options.git_repository,
             odoo_version: options.odoo_version,
             python_version: options.python_version,
@@ -77,6 +81,7 @@ pub fn run() -> AnyhowResult<()> {
 
 pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let project_name = prompt_required("Project Name")?;
+    let project_path = prompt_text_with_default("Project Path", &project_name)?;
     let git_repository = prompt_required("Git Repository")?;
     let odoo_version =
         prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)?;
@@ -88,6 +93,7 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
 
     let options = ProjectOptions {
         project_name,
+        project_path,
         git_repository,
         odoo_version,
         python_version,
@@ -138,6 +144,15 @@ pub fn database_name_from_project(project_name: &str) -> String {
     }
 }
 
+pub fn project_path_from_input(project_path: &str, project_name: &str) -> String {
+    let trimmed = project_path.trim();
+    if trimmed.is_empty() {
+        project_name.trim().to_owned()
+    } else {
+        trimmed.to_owned()
+    }
+}
+
 fn prompt_required(label: &str) -> AnyhowResult<String> {
     loop {
         println!("{label}:");
@@ -154,6 +169,24 @@ fn prompt_required(label: &str) -> AnyhowResult<String> {
         }
 
         println!("{}", style("Value is required.").red());
+    }
+}
+
+fn prompt_text_with_default(label: &str, default: &str) -> AnyhowResult<String> {
+    println!("{label}:");
+    println!("  {default} (default)");
+    print!("> ");
+    io::stdout().flush()?;
+
+    let mut input = String::new();
+    io::stdin().read_line(&mut input)?;
+    let value = input.trim();
+
+    println!();
+    if value.is_empty() {
+        Ok(default.to_owned())
+    } else {
+        Ok(value.to_owned())
     }
 }
 
@@ -238,7 +271,10 @@ fn prompt_yes_no(label: &str) -> AnyhowResult<bool> {
 
 #[cfg(test)]
 mod tests {
-    use super::{database_name_from_project, supported_python_versions, validate_python_version};
+    use super::{
+        database_name_from_project, project_path_from_input, supported_python_versions,
+        validate_python_version,
+    };
 
     #[test]
     fn validates_python_compatibility() {
@@ -263,5 +299,17 @@ mod tests {
             "geaai_odoo".to_owned()
         );
         assert_eq!(database_name_from_project("!!!"), "odoo".to_owned());
+    }
+
+    #[test]
+    fn defaults_project_path_to_project_name() {
+        assert_eq!(project_path_from_input("", "sample"), "sample".to_owned());
+        assert_eq!(
+            project_path_from_input(
+                " /Users/agga/Documents/python-dev/odoo-dev/sample ",
+                "sample"
+            ),
+            "/Users/agga/Documents/python-dev/odoo-dev/sample".to_owned()
+        );
     }
 }

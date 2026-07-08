@@ -107,7 +107,11 @@ Starts an interactive generator:
 Odoo Project Creator
 
 Project Name:
-> geaai_odoo
+> sample
+
+Project Path:
+  sample (default)
+> /Users/agga/Documents/python-dev/odoo-dev/sample
 
 Git Repository:
 > git@github.com:company/template.git
