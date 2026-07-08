@@ -14,6 +14,7 @@ const ODOO_VERSIONS: &[&str] = &["19.0", "18.0", "17.0"];
 const PYTHON_VERSIONS: &[&str] = &["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"];
 const POSTGRES_VERSIONS: &[&str] = &["17", "16"];
 const DEFAULT_ODOO_VERSION: &str = "19.0";
+const DEFAULT_POSTGRES_VERSION: &str = "17";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ProjectConfig {
@@ -86,8 +87,16 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let odoo_version =
         prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)?;
     let python_version = prompt_choice("Python Version", PYTHON_VERSIONS)?;
-    let postgres_version = prompt_choice("PostgreSQL Version", POSTGRES_VERSIONS)?;
     let use_docker = prompt_yes_no("Use Docker")?;
+    let postgres_version = if use_docker {
+        prompt_choice_with_default(
+            "PostgreSQL Version",
+            POSTGRES_VERSIONS,
+            DEFAULT_POSTGRES_VERSION,
+        )?
+    } else {
+        DEFAULT_POSTGRES_VERSION.to_owned()
+    };
     let generate_pycharm = prompt_yes_no("Generate PyCharm")?;
     let generate_vscode = prompt_yes_no("Generate VS Code")?;
 

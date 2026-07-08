@@ -130,6 +130,15 @@ Python Version:
   3.12
   3.13
 > 3.10
+
+Use Docker:
+  yes/no
+> yes
+
+PostgreSQL Version:
+  17 (default)
+  16
+> 17
 ```
 
 ODK then:
