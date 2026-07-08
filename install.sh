@@ -4,6 +4,7 @@ set -eu
 REPO="${ODK_REPO:-odoo-developer-kit/odoo-developer-kit}"
 INSTALL_DIR="${ODK_INSTALL_DIR:-$HOME/.local/bin}"
 BIN_NAME="odk"
+PACKAGE_NAME="odoo-developer-kit"
 
 detect_target() {
   os_name="$(uname -s 2>/dev/null || echo unknown)"
@@ -25,8 +26,8 @@ detect_target() {
 download_url() {
   target="$1"
   case "$target" in
-    *windows*|*msvc*) echo "https://github.com/${REPO}/releases/latest/download/odk-${target}.zip" ;;
-    *) echo "https://github.com/${REPO}/releases/latest/download/odk-${target}.tar.gz" ;;
+    *windows*|*msvc*) echo "https://github.com/${REPO}/releases/latest/download/${PACKAGE_NAME}-${target}.zip" ;;
+    *) echo "https://github.com/${REPO}/releases/latest/download/${PACKAGE_NAME}-${target}.tar.xz" ;;
   esac
 }
 
@@ -62,8 +63,12 @@ main() {
       fi
       unzip -q "$archive" -d "$extract_dir"
       ;;
+    *.tar.xz)
+      tar -xJf "$archive" -C "$extract_dir"
+      ;;
     *)
-      tar -xzf "$archive" -C "$extract_dir"
+      echo "Unsupported archive format: $url" >&2
+      exit 1
       ;;
   esac
 

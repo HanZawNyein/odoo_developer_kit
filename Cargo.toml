@@ -36,6 +36,7 @@ strip = true
 
 [workspace.metadata.dist]
 cargo-dist-version = "0.28.0"
+allow-dirty = ["ci"]
 ci = "github"
 installers = ["shell", "powershell"]
 targets = [

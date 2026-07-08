@@ -201,6 +201,17 @@ Build a release binary:
 cargo build --release
 ```
 
+## Release
+
+Releases are built with `cargo-dist` from version tags:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The release workflow runs tests, builds binaries for macOS, Linux, and Windows, and publishes a GitHub Release.
+
 ## License
 
 Odoo Developer Kit is licensed under the [Apache License 2.0](LICENSE).
