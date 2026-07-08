@@ -34,6 +34,7 @@ jobs:
     needs: test
     name: Build ${{ matrix.target }}
     runs-on: ${{ matrix.runner }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -60,7 +61,7 @@ jobs:
         run: rustup target add ${{ matrix.target }}
 
       - name: Install cargo-dist
-        run: cargo install cargo-dist --version 0.28.0 --locked
+        run: cargo install cargo-dist --version 0.32.0 --locked
 
       - name: Build release artifact
         run: dist build --artifacts=local --target ${{ matrix.target }} --tag ${{ github.ref_name }}
