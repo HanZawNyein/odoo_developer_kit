@@ -4,7 +4,7 @@ resolver = "2"
 
 [package]
 name = "odoo-developer-kit"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "Odoo Developer Kit: a Flutter-like CLI for Odoo developers."
 license = "Apache-2.0"
