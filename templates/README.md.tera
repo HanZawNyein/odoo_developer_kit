@@ -19,6 +19,8 @@ uv lock
 {% if use_docker %}
 ## Docker
 
+`odoo_pg_pass` is used as the PostgreSQL password secret.
+
 ```bash
 docker compose up --build
 ```

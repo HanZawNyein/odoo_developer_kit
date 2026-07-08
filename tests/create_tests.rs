@@ -39,8 +39,35 @@ fn renders_odoo_conf_template() {
         .render_to_string("odoo.conf.tera", &sample_config())
         .expect("template should render");
 
-    assert!(rendered.contains("addons_path = addons,custom"));
+    assert!(rendered.contains("addons_path = /mnt/extra-addons"));
+    assert!(rendered.contains("data_dir = /var/lib/odoo"));
     assert!(rendered.contains("db_host = db"));
+}
+
+#[test]
+fn renders_docker_compose_template() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let rendered = renderer
+        .render_to_string("compose.yaml.tera", &sample_config())
+        .expect("template should render");
+
+    assert!(rendered.contains("web:"));
+    assert!(rendered.contains("dockerfile: Dockerfile"));
+    assert!(rendered.contains("./config:/etc/odoo"));
+    assert!(rendered.contains("image: postgres:17"));
+    assert!(rendered.contains("POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password"));
+    assert!(rendered.contains("file: odoo_pg_pass"));
+}
+
+#[test]
+fn renders_dockerfile_template() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let rendered = renderer
+        .render_to_string("Dockerfile.tera", &sample_config())
+        .expect("template should render");
+
+    assert!(rendered.contains("FROM odoo:19.0"));
+    assert!(rendered.contains("COPY ./addons /mnt/extra-addons"));
 }
 
 #[test]

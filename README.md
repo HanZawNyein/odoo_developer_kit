@@ -149,8 +149,9 @@ ODK never uses `python -m venv`.
 project/
 ├── .venv/
 ├── addons/
+├── config/
+│   └── odoo.conf
 ├── custom/
-├── docker/
 ├── scripts/
 ├── .idea/
 ├── .vscode/
@@ -158,7 +159,7 @@ project/
 ├── Dockerfile
 ├── .env
 ├── .gitignore
-├── odoo.conf
+├── odoo_pg_pass
 ├── README.md
 ├── pyproject.toml
 └── uv.lock

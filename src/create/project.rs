@@ -38,7 +38,7 @@ pub fn create_project(config: &ProjectConfig) -> Result<PathBuf> {
         run_required("uv", &args, Some(&target))
     })?;
 
-    create_project_directories(&target)?;
+    create_project_directories(&target, config.use_docker)?;
 
     let renderer = TemplateRenderer::new()?;
     renderer.render_project(config, &target)?;
@@ -88,8 +88,13 @@ fn ensure_target_is_available(target: &Path) -> Result<(), OdkError> {
     Ok(())
 }
 
-fn create_project_directories(target: &Path) -> Result<(), OdkError> {
-    for directory in ["addons", "custom", "docker", "scripts"] {
+fn create_project_directories(target: &Path, use_docker: bool) -> Result<(), OdkError> {
+    let mut directories = vec!["addons", "custom", "scripts"];
+    if use_docker {
+        directories.push("config");
+    }
+
+    for directory in directories {
         fs::create_dir_all(target.join(directory))?;
     }
     Ok(())

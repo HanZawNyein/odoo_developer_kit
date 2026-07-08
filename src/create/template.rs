@@ -30,6 +30,11 @@ impl TemplateRenderer {
         )?;
         add_template(
             &mut tera,
+            "odoo_pg_pass.tera",
+            include_str!("../../templates/odoo_pg_pass.tera"),
+        )?;
+        add_template(
+            &mut tera,
             "env.tera",
             include_str!("../../templates/env.tera"),
         )?;
@@ -92,7 +97,6 @@ impl TemplateRenderer {
         let mut files = vec![
             ("env.tera", PathBuf::from(".env")),
             ("gitignore.tera", PathBuf::from(".gitignore")),
-            ("odoo.conf.tera", PathBuf::from("odoo.conf")),
             ("README.md.tera", PathBuf::from("README.md")),
             ("pyproject.toml.tera", PathBuf::from("pyproject.toml")),
         ];
@@ -100,6 +104,10 @@ impl TemplateRenderer {
         if config.use_docker {
             files.push(("compose.yaml.tera", PathBuf::from("compose.yaml")));
             files.push(("Dockerfile.tera", PathBuf::from("Dockerfile")));
+            files.push(("odoo.conf.tera", PathBuf::from("config/odoo.conf")));
+            files.push(("odoo_pg_pass.tera", PathBuf::from("odoo_pg_pass")));
+        } else {
+            files.push(("odoo.conf.tera", PathBuf::from("odoo.conf")));
         }
 
         if config.generate_pycharm {

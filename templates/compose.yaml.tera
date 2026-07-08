@@ -1,32 +1,36 @@
 services:
-  db:
-    image: postgres:{{ postgres_version }}
-    environment:
-      POSTGRES_DB: {{ database_name }}
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  odoo:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - db
-    environment:
-      HOST: db
-      USER: odoo
-      PASSWORD: odoo
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
     ports:
       - "8069:8069"
+    environment:
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+    secrets:
+      - postgresql_password
+  db:
+    image: postgres:{{ postgres_version }}
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - ./addons:/mnt/extra-addons/addons
-      - ./custom:/mnt/extra-addons/custom
-      - ./odoo.conf:/etc/odoo/odoo.conf:ro
-    command: ["odoo", "-c", "/etc/odoo/odoo.conf", "-d", "{{ database_name }}"]
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql_password
 
 volumes:
-  postgres-data:
+  odoo-web-data:
+  odoo-db-data:
+
+secrets:
+  postgresql_password:
+    file: odoo_pg_pass

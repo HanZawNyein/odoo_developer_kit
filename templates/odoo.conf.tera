@@ -1,7 +1,7 @@
 [options]
-addons_path = addons,custom
+addons_path = {% if use_docker %}/mnt/extra-addons{% else %}addons,custom{% endif %}
 admin_passwd = admin
-data_dir = .odoo-data
+data_dir = {% if use_docker %}/var/lib/odoo{% else %}.odoo-data{% endif %}
 db_host = {% if use_docker %}db{% else %}localhost{% endif %}
 db_port = 5432
 db_user = odoo

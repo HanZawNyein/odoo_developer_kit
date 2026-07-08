@@ -1,5 +1,6 @@
 .DS_Store
 .env
+odoo_pg_pass
 .idea/workspace.xml
 .odoo-data/
 .venv/
