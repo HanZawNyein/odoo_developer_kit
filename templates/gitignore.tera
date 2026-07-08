@@ -1,6 +1,5 @@
 .DS_Store
 .env
-odoo_pg_pass
 .idea/workspace.xml
 .odoo-data/
 .venv/
@@ -10,3 +9,9 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+.idea/
+.vscode/
+config/
+odoo.conf
+odoo_pg_pass

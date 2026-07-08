@@ -89,7 +89,7 @@ fn ensure_target_is_available(target: &Path) -> Result<(), OdkError> {
 }
 
 fn create_project_directories(target: &Path, use_docker: bool) -> Result<(), OdkError> {
-    let mut directories = vec!["addons", "custom", "scripts"];
+    let mut directories = vec!["addons"];
     if use_docker {
         directories.push("config");
     }

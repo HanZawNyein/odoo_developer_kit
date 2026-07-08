@@ -71,6 +71,19 @@ fn renders_dockerfile_template() {
 }
 
 #[test]
+fn renders_gitignore_template() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let rendered = renderer
+        .render_to_string("gitignore.tera", &sample_config())
+        .expect("template should render");
+
+    assert_eq!(
+        rendered,
+        ".DS_Store\n.env\n.idea/workspace.xml\n.odoo-data/\n.venv/\ntarget/\n__pycache__/\n*.py[cod]\n*.egg-info/\ndist/\nbuild/\n\n.idea/\n.vscode/\nconfig/\nodoo.conf\nodoo_pg_pass\n"
+    );
+}
+
+#[test]
 fn generated_pyproject_is_valid_toml() {
     let renderer = TemplateRenderer::new().expect("templates should load");
     let rendered = renderer

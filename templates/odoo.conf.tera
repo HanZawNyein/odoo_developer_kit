@@ -1,5 +1,5 @@
 [options]
-addons_path = {% if use_docker %}/mnt/extra-addons{% else %}addons,custom{% endif %}
+addons_path = {% if use_docker %}/mnt/extra-addons{% else %}addons{% endif %}
 admin_passwd = admin
 data_dir = {% if use_docker %}/var/lib/odoo{% else %}.odoo-data{% endif %}
 db_host = {% if use_docker %}db{% else %}localhost{% endif %}

@@ -151,8 +151,6 @@ project/
 ├── addons/
 ├── config/
 │   └── odoo.conf
-├── custom/
-├── scripts/
 ├── .idea/
 ├── .vscode/
 ├── compose.yaml
