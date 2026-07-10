@@ -22,6 +22,7 @@ pub struct ProjectConfig {
     pub project_name: String,
     pub project_path: String,
     pub git_repository: String,
+    pub odoo_source_path: String,
     pub odoo_version: String,
     pub python_version: String,
     pub postgres_version: String,
@@ -36,6 +37,7 @@ pub struct ProjectOptions {
     pub project_name: String,
     pub project_path: String,
     pub git_repository: String,
+    pub odoo_source_path: String,
     pub odoo_version: String,
     pub python_version: String,
     pub postgres_version: String,
@@ -54,6 +56,7 @@ impl ProjectConfig {
             project_name: options.project_name,
             project_path,
             git_repository: options.git_repository,
+            odoo_source_path: options.odoo_source_path,
             odoo_version: options.odoo_version,
             python_version: options.python_version,
             postgres_version: options.postgres_version,
@@ -85,6 +88,7 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let project_name = prompt_required("Project Name")?;
     let project_path = prompt_text_with_default("Project Path", &project_name)?;
     let git_repository = prompt_required("Git Repository")?;
+    let odoo_source_path = prompt_required("Odoo Source Code Path")?;
     let odoo_version =
         prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)?;
     let python_version =
@@ -106,6 +110,7 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
         project_name,
         project_path,
         git_repository,
+        odoo_source_path,
         odoo_version,
         python_version,
         postgres_version,

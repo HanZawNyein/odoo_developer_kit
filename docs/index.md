@@ -174,6 +174,9 @@ Project Path:
 Git Repository:
 > 
 
+Odoo Source Code Path:
+> /Users/agga/src/odoo
+
 Odoo Version:
   19.0 (default)
   18.0

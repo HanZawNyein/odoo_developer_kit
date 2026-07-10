@@ -30,6 +30,11 @@ impl TemplateRenderer {
         )?;
         add_template(
             &mut tera,
+            "odoo.docker.conf.tera",
+            include_str!("../../templates/odoo.docker.conf.tera"),
+        )?;
+        add_template(
+            &mut tera,
             "odoo_pg_pass.tera",
             include_str!("../../templates/odoo_pg_pass.tera"),
         )?;
@@ -98,7 +103,7 @@ impl TemplateRenderer {
         if config.use_docker {
             files.push(("compose.yaml.tera", PathBuf::from("compose.yaml")));
             files.push(("Dockerfile.tera", PathBuf::from("Dockerfile")));
-            files.push(("odoo.conf.tera", PathBuf::from("config/odoo.conf")));
+            files.push(("odoo.docker.conf.tera", PathBuf::from("config/odoo.conf")));
             files.push(("odoo.conf.tera", PathBuf::from("odoo.conf")));
             files.push(("odoo_pg_pass.tera", PathBuf::from("odoo_pg_pass")));
         } else {

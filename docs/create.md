@@ -12,12 +12,13 @@ The generator asks for the values that shape the project:
 
 1. Project Name
 2. Git Repository
-3. Odoo Version
-4. Python Version
-5. PostgreSQL Version
-6. Use Docker
-7. Generate PyCharm
-8. Generate VS Code
+3. Odoo Source Code Path
+4. Odoo Version
+5. Python Version
+6. PostgreSQL Version
+7. Use Docker
+8. Generate PyCharm
+9. Generate VS Code
 
 ```text
 Odoo Project Creator
@@ -27,6 +28,9 @@ Project Name:
 
 Git Repository:
 > git@github.com:company/template.git
+
+Odoo Source Code Path:
+> /Users/agga/src/odoo
 
 Odoo Version:
   19.0

@@ -10,6 +10,7 @@ fn sample_config() -> ProjectConfig {
         project_name: "geaai_odoo".to_owned(),
         project_path: "/Users/agga/Documents/python-dev/odoo-dev/sample".to_owned(),
         git_repository: "git@github.com:company/template.git".to_owned(),
+        odoo_source_path: "/Users/agga/src/odoo".to_owned(),
         odoo_version: "19.0".to_owned(),
         python_version: "3.13".to_owned(),
         postgres_version: "17".to_owned(),
@@ -18,6 +19,22 @@ fn sample_config() -> ProjectConfig {
         generate_vscode: true,
     })
     .expect("sample config should be valid")
+}
+
+fn sample_local_config() -> ProjectConfig {
+    ProjectConfig::from_options(ProjectOptions {
+        project_name: "geaai_odoo".to_owned(),
+        project_path: "/Users/agga/Documents/python-dev/odoo-dev/sample".to_owned(),
+        git_repository: "git@github.com:company/template.git".to_owned(),
+        odoo_source_path: "/Users/agga/src/odoo".to_owned(),
+        odoo_version: "19.0".to_owned(),
+        python_version: "3.13".to_owned(),
+        postgres_version: "17".to_owned(),
+        use_docker: false,
+        generate_pycharm: true,
+        generate_vscode: true,
+    })
+    .expect("sample local config should be valid")
 }
 
 #[test]
@@ -39,6 +56,32 @@ fn renders_odoo_conf_template() {
     let renderer = TemplateRenderer::new().expect("templates should load");
     let rendered = renderer
         .render_to_string("odoo.conf.tera", &sample_config())
+        .expect("template should render");
+
+    assert_eq!(
+        rendered,
+        "[options]\naddons_path = /Users/agga/src/odoo/addons,/Users/agga/Documents/python-dev/odoo-dev/sample/addons\nadmin_passwd = admin\n"
+    );
+}
+
+#[test]
+fn renders_local_odoo_conf_template() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let rendered = renderer
+        .render_to_string("odoo.conf.tera", &sample_local_config())
+        .expect("template should render");
+
+    assert_eq!(
+        rendered,
+        "[options]\naddons_path = /Users/agga/src/odoo/addons,/Users/agga/Documents/python-dev/odoo-dev/sample/addons\nadmin_passwd = admin\n"
+    );
+}
+
+#[test]
+fn renders_docker_odoo_conf_template() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let rendered = renderer
+        .render_to_string("odoo.docker.conf.tera", &sample_config())
         .expect("template should render");
 
     assert_eq!(
@@ -97,6 +140,16 @@ fn render_project_with_docker_creates_both_odoo_conf_files() {
 
     assert!(temp_dir.join("config/odoo.conf").exists());
     assert!(temp_dir.join("odoo.conf").exists());
+
+    assert_eq!(
+        fs::read_to_string(temp_dir.join("config/odoo.conf"))
+            .expect("docker config should be readable"),
+        "[options]\naddons_path = /mnt/extra-addons\nadmin_passwd = admin\n"
+    );
+    assert_eq!(
+        fs::read_to_string(temp_dir.join("odoo.conf")).expect("local config should be readable"),
+        "[options]\naddons_path = /Users/agga/src/odoo/addons,/Users/agga/Documents/python-dev/odoo-dev/sample/addons\nadmin_passwd = admin\n"
+    );
 }
 
 #[test]

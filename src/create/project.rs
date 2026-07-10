@@ -47,7 +47,16 @@ pub fn create_project(config: &ProjectConfig) -> Result<PathBuf> {
     create_project_directories(&target, config.use_docker)?;
 
     let renderer = TemplateRenderer::new()?;
-    renderer.render_project(config, &target)?;
+    let render_config = ProjectConfig {
+        project_path: target.display().to_string(),
+        ..config.clone()
+    };
+    renderer.render_project(&render_config, &target)?;
+
+    println!(
+        "Local addons_path: {}/addons,{}/addons",
+        render_config.odoo_source_path, render_config.project_path
+    );
 
     run_step(
         "Generating uv.lock",
