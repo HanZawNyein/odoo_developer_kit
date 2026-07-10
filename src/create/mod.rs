@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::OdkError;
 
-const ODOO_VERSIONS: &[&str] = &["19.0", "18.0", "17.0"];
+const ODOO_VERSIONS: &[&str] = &["19.1", "19.0", "18.1", "18.0", "17.0"];
 const PYTHON_VERSIONS: &[&str] = &["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"];
 const POSTGRES_VERSIONS: &[&str] = &["17", "16"];
 const DEFAULT_ODOO_VERSION: &str = "19.0";
@@ -89,7 +89,7 @@ pub fn run() -> AnyhowResult<()> {
 pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let project_name = prompt_required("Project Name")?;
     let project_path = prompt_text_with_default("Project Path", &project_name)?;
-    let git_repository = prompt_required("Git Repository")?;
+    let git_repository = prompt_optional("Git Repository")?;
     let odoo_source_path = prompt_required("Odoo Source Code Path")?;
     let odoo_version = prompt_odoo_version(&odoo_source_path)?;
     let python_version =
@@ -157,9 +157,65 @@ fn detect_odoo_version_from_release(release: &str) -> Option<String> {
         let (_, value) = line.split_once('=')?;
         let tuple = value.trim().strip_prefix('(')?.split_once(')')?.0;
         let mut parts = tuple.split(',').map(str::trim);
-        let major = parts.next()?.parse::<u16>().ok()?;
-        let minor = parts.next()?.parse::<u16>().ok()?;
-        return Some(format!("{major}.{minor}"));
+        let major = parts.next()?;
+        let minor = parts.next()?;
+
+        if let (Ok(major), Ok(minor)) = (major.parse::<u16>(), minor.parse::<u16>()) {
+            return Some(format!("{major}.{minor}"));
+        }
+
+        if let Some(version) = first_major_minor_version(major) {
+            return Some(version);
+        }
+    }
+
+    None
+}
+
+pub fn docker_odoo_version(odoo_version: &str) -> String {
+    match odoo_version.trim().split_once('.') {
+        Some((major, _)) if !major.is_empty() && major.chars().all(|c| c.is_ascii_digit()) => {
+            format!("{major}.0")
+        }
+        _ => odoo_version.to_owned(),
+    }
+}
+
+fn first_major_minor_version(text: &str) -> Option<String> {
+    let mut characters = text.trim_matches(['"', '\'']).chars().peekable();
+
+    while let Some(character) = characters.next() {
+        if !character.is_ascii_digit() {
+            continue;
+        }
+
+        let mut major = String::from(character);
+        while let Some(next) = characters.peek() {
+            if next.is_ascii_digit() {
+                major.push(*next);
+                characters.next();
+            } else {
+                break;
+            }
+        }
+
+        if characters.next() != Some('.') {
+            continue;
+        }
+
+        let mut minor = String::new();
+        while let Some(next) = characters.peek() {
+            if next.is_ascii_digit() {
+                minor.push(*next);
+                characters.next();
+            } else {
+                break;
+            }
+        }
+
+        if !minor.is_empty() {
+            return Some(format!("{major}.{minor}"));
+        }
     }
 
     None
@@ -240,6 +296,18 @@ fn prompt_text_with_default(label: &str, default: &str) -> AnyhowResult<String> 
     }
 }
 
+fn prompt_optional(label: &str) -> AnyhowResult<String> {
+    println!("{label}:");
+    println!("  leave empty to skip");
+    print!("> ");
+    io::stdout().flush()?;
+
+    let mut input = String::new();
+    io::stdin().read_line(&mut input)?;
+    println!();
+    Ok(input.trim().to_owned())
+}
+
 fn prompt_choice_with_default(
     label: &str,
     choices: &[&str],
@@ -251,17 +319,10 @@ fn prompt_choice_with_default(
 
 fn prompt_odoo_version(odoo_source_path: &str) -> AnyhowResult<String> {
     if let Some(version) = detect_odoo_version_from_source(odoo_source_path) {
-        if ODOO_VERSIONS.contains(&version.as_str()) {
-            println!("Odoo Version:");
-            println!("  {version} (detected)");
-            println!();
-            return Ok(version);
-        }
-
-        println!(
-            "{} detected unsupported Odoo version `{version}`.",
-            style("Warning:").yellow().bold()
-        );
+        println!("Odoo Version:");
+        println!("  {version} (detected)");
+        println!();
+        return Ok(version);
     }
 
     prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)
@@ -336,8 +397,8 @@ fn prompt_yes_no(label: &str) -> AnyhowResult<bool> {
 #[cfg(test)]
 mod tests {
     use super::{
-        database_name_from_project, detect_odoo_version_from_source, project_path_from_input,
-        supported_python_versions, validate_python_version,
+        database_name_from_project, detect_odoo_version_from_source, docker_odoo_version,
+        project_path_from_input, supported_python_versions, validate_python_version,
     };
     use std::fs;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -377,6 +438,34 @@ mod tests {
             detect_odoo_version_from_source(&temp_dir.to_string_lossy()),
             Some("19.0".to_owned())
         );
+    }
+
+    #[test]
+    fn detects_minor_odoo_version_from_source_path() {
+        let unique = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("clock should be monotonic")
+            .as_nanos();
+        let temp_dir = std::env::temp_dir().join(format!("odk-odoo-saas-source-{unique}"));
+        let odoo_dir = temp_dir.join("odoo");
+        fs::create_dir_all(&odoo_dir).expect("odoo dir should be created");
+        fs::write(
+            odoo_dir.join("release.py"),
+            "RELEASE_LEVELS = [FINAL] = ['final']\nversion_info = ('saas~18.1', 0, 0, FINAL, 0, '')\n",
+        )
+        .expect("release file should be written");
+
+        assert_eq!(
+            detect_odoo_version_from_source(&temp_dir.to_string_lossy()),
+            Some("18.1".to_owned())
+        );
+    }
+
+    #[test]
+    fn derives_stable_docker_tag_from_odoo_version() {
+        assert_eq!(docker_odoo_version("18.0"), "18.0");
+        assert_eq!(docker_odoo_version("18.1"), "18.0");
+        assert_eq!(docker_odoo_version("19.1"), "19.0");
     }
 
     #[test]

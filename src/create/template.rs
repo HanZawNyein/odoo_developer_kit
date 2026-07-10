@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use tera::{Context, Tera};
 
-use crate::create::ProjectConfig;
+use crate::create::{ProjectConfig, docker_odoo_version};
 use crate::error::OdkError;
 
 pub struct TemplateRenderer {
@@ -107,7 +107,11 @@ impl TemplateRenderer {
         template_name: &str,
         config: &ProjectConfig,
     ) -> Result<String, OdkError> {
-        let context = Context::from_serialize(config)?;
+        let mut context = Context::from_serialize(config)?;
+        context.insert(
+            "docker_odoo_version",
+            &docker_odoo_version(&config.odoo_version),
+        );
         self.tera
             .render(template_name, &context)
             .map_err(OdkError::Template)

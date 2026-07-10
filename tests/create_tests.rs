@@ -219,6 +219,18 @@ fn renders_dockerfile_template() {
 }
 
 #[test]
+fn renders_dockerfile_with_stable_odoo_tag_for_minor_version() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let mut config = sample_config();
+    config.odoo_version = "18.1".to_owned();
+    let rendered = renderer
+        .render_to_string("Dockerfile.tera", &config)
+        .expect("template should render");
+
+    assert!(rendered.contains("FROM odoo:18.0"));
+}
+
+#[test]
 fn renders_gitignore_template() {
     let renderer = TemplateRenderer::new().expect("templates should load");
     let rendered = renderer

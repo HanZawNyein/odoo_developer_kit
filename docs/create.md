@@ -12,9 +12,9 @@ The generator asks for the values that shape the project:
 
 1. Project Name
 2. Project Path
-3. Git Repository
+3. Git Repository, optional
 4. Odoo Source Code Path
-5. Odoo Version, detected from `odoo/release.py` when available
+5. Odoo Version, detected from `odoo/release.py` when available, including minor versions like `18.1`
 6. Python Version
 7. PostgreSQL Version
 8. Use Docker
@@ -32,13 +32,14 @@ Project Path:
 > /Users/agga/Documents/python-dev/odoo-dev
 
 Git Repository:
-> git@github.com:company/template.git
+  leave empty to skip
+> 
 
 Odoo Source Code Path:
 > /Users/agga/src/odoo
 
 Odoo Version:
-  19.0 (detected)
+  19.1 (detected)
 
 Python Version:
   3.10
@@ -59,7 +60,7 @@ ODK performs the setup in a deterministic order:
 ```mermaid
 flowchart LR
     A[Collect answers] --> B[Validate Python compatibility]
-    B --> C[Clone repository]
+    B --> C[Clone repository when provided]
     C --> D[Install Python with uv]
     D --> E[Create .venv with uv]
     E --> F[Install Odoo requirements]
@@ -76,6 +77,9 @@ uv pip install -r <odoo_source_path>/requirements.txt
 ```
 
 Requirement installation failures are reported but do not stop project creation.
+
+When Docker is enabled, ODK derives the image tag from the detected Odoo version's
+major number. For example, Odoo `18.1` renders `FROM odoo:18.0`.
 
 !!! warning "No `python -m venv`"
     ODK deliberately avoids `python -m venv` so teams get one consistent Python environment workflow.
@@ -118,6 +122,7 @@ Every generated file is rendered with Tera. Templates receive:
 | --- | --- |
 | `project_name` | Project directory and package name |
 | `odoo_version` | Selected Odoo version |
+| `docker_odoo_version` | Stable Docker image tag derived from `odoo_version`, for example `18.0` for `18.1` |
 | `python_version` | Selected Python version |
 | `postgres_version` | Selected PostgreSQL version |
 | `database_name` | PostgreSQL-safe database name derived from the project name |

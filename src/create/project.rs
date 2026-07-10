@@ -15,11 +15,15 @@ pub fn create_project(config: &ProjectConfig) -> Result<PathBuf> {
     let target = absolute_path(&PathBuf::from(&config.project_path))?;
     ensure_target_is_available(&target)?;
 
-    run_step(
-        "Cloning repository",
-        Some(config.git_repository.clone()),
-        || git::clone_repository(&config.git_repository, &target),
-    )?;
+    if config.git_repository.trim().is_empty() {
+        fs::create_dir_all(&target)?;
+    } else {
+        run_step(
+            "Cloning repository",
+            Some(config.git_repository.clone()),
+            || git::clone_repository(&config.git_repository, &target),
+        )?;
+    }
 
     run_step("Installing Python with uv", None, || {
         let args = vec![

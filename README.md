@@ -127,13 +127,14 @@ Project Path:
 > /Users/agga/Documents/python-dev/odoo-dev
 
 Git Repository:
-> git@github.com:company/template.git
+  leave empty to skip
+> 
 
 Odoo Source Code Path:
 > /Users/agga/src/odoo
 
 Odoo Version:
-  19.0 (detected)
+  19.1 (detected)
 
 Python Version:
   3.10
@@ -160,14 +161,15 @@ project path; ODK does not append the project name twice.
 
 ODK then:
 
-1. Clones the repository with `git clone`.
+1. Clones the repository with `git clone` when a Git repository is provided.
 2. Installs Python with `uv python install <version>`.
 3. Creates `.venv` with `uv venv .venv --python <version>`.
 4. Installs Odoo requirements with `uv pip install -r <odoo_source_path>/requirements.txt`.
    If requirement installation fails, ODK reports the error and continues so you can fix it manually.
 5. Generates folders and project files from Tera templates.
-6. Generates PyCharm and VS Code configuration when selected.
-7. Runs `uv lock`.
+6. Uses the stable Odoo Docker image tag for Docker builds, so Odoo `19.1` renders `FROM odoo:19.0`.
+7. Generates PyCharm and VS Code configuration when selected.
+8. Runs `uv lock`.
 
 ODK never uses `python -m venv`.
 

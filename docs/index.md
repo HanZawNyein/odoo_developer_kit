@@ -176,13 +176,14 @@ Project Path:
 > /Users/agga/Documents/python-dev/odoo-dev
 
 Git Repository:
+  leave empty to skip
 > 
 
 Odoo Source Code Path:
 > /Users/agga/src/odoo
 
 Odoo Version:
-  19.0 (detected)
+  19.1 (detected)
 
 Python Version:
   3.8
@@ -221,7 +222,7 @@ ODK then:
 3. Creates `.venv` using `uv venv`.
 4. Installs `<odoo_source_path>/requirements.txt` with `uv pip install -r`.
 5. Generates Odoo project files from templates.
-6. Generates Docker files when selected.
+6. Generates Docker files when selected, using `major.0` as the Odoo image tag.
 7. Generates PyCharm configuration when selected.
 8. Generates VS Code configuration when selected.
 9. Runs `uv lock`.
