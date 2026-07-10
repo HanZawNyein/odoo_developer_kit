@@ -17,6 +17,8 @@ enum Commands {
     Doctor,
     /// Create a new Odoo development project.
     Create,
+    /// Upgrade ODK to the latest GitHub release.
+    Upgrade,
 }
 
 pub fn run() -> Result<()> {
@@ -25,5 +27,6 @@ pub fn run() -> Result<()> {
     match cli.command {
         Commands::Doctor => crate::doctor::run(),
         Commands::Create => crate::create::run(),
+        Commands::Upgrade => crate::upgrade::run(),
     }
 }

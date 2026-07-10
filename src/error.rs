@@ -26,6 +26,9 @@ pub enum OdkError {
     #[error("unsupported operating system or architecture: {0}")]
     UnsupportedPlatform(String),
 
+    #[error("invalid GitHub release response: {0}")]
+    InvalidReleaseResponse(String),
+
     #[error(transparent)]
     Io(#[from] std::io::Error),
 

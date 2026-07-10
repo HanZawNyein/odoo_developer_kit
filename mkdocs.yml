@@ -60,6 +60,7 @@ nav:
   - Commands:
       - Doctor: doctor.md
       - Create: create.md
+      - Upgrade: upgrade.md
   - Guides:
       - Generated Project Structure: project-structure.md
       - Docker Development: docker.md

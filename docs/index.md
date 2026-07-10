@@ -12,6 +12,7 @@ ODK is designed with a small and focused command surface:
 ```bash
 odk doctor
 odk create
+odk upgrade
 ```
 
 ---
@@ -234,6 +235,7 @@ ODK does **not** use `python -m venv`.
 | ------------ | ------------------------------------------ | ---------------------------------------------------------------------- |
 | `odk doctor` | Validate the local development environment | Before onboarding, after OS upgrades, or before starting a new project |
 | `odk create` | Generate a clean Odoo development project  | When bootstrapping a new Odoo development environment                  |
+| `odk upgrade` | Install the latest ODK release | When `odk doctor` reports that a newer version is available |
 
 ---
 
@@ -283,6 +285,8 @@ Environment ready!
 ```
 
 If a tool is missing, ODK shows an installation suggestion for your operating system.
+
+If a newer ODK release is available, `odk doctor` prints a warning and suggests `odk upgrade`.
 
 ---
 

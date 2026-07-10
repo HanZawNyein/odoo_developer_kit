@@ -7,6 +7,12 @@ odk doctor
 odk create
 ```
 
+If `odk doctor` reports that a newer ODK version is available, upgrade first:
+
+```bash
+odk upgrade
+```
+
 The create command asks for:
 
 1. Project name

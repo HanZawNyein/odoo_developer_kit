@@ -20,6 +20,8 @@ ODK checks only the tools that are part of the supported Odoo workflow.
 | PostgreSQL | `psql --version` |
 | `wkhtmltopdf` | `wkhtmltopdf --version` |
 
+It also checks whether the running ODK binary is behind the latest GitHub Release. If a newer version is available, it prints a warning and suggests `odk upgrade`.
+
 ## Example: Ready Environment
 
 ```text

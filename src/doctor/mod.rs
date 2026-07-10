@@ -8,6 +8,7 @@ pub mod wkhtmltopdf;
 use anyhow::Result;
 use console::style;
 
+use crate::upgrade::{VersionStatus, latest_version_status};
 use crate::utils::command::{first_version, run_command, string_args};
 use crate::utils::platform::{Platform, install_suggestion};
 
@@ -49,6 +50,7 @@ pub fn run() -> Result<()> {
     let platform = Platform::detect();
     let checks = run_checks(platform);
     render_checks(&checks, platform);
+    render_version_warning(latest_version_status());
     Ok(())
 }
 
@@ -119,6 +121,17 @@ fn render_checks(checks: &[CheckResult], platform: Platform) {
             .yellow()
             .bold()
         );
+    }
+}
+
+fn render_version_warning(status: VersionStatus) {
+    if let VersionStatus::Outdated { current, latest } = status {
+        println!(
+            "{} ODK {current} is installed, but {latest} is available.",
+            style("Warning:").yellow().bold()
+        );
+        println!("    Run `odk upgrade` to install the latest version.");
+        println!();
     }
 }
 

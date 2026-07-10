@@ -6,11 +6,12 @@
 
 Odoo Developer Kit (`odk`) is a Flutter-like developer toolkit for building professional Odoo development environments.
 
-ODK intentionally exposes only two commands:
+ODK intentionally exposes a small command set:
 
 ```bash
 odk doctor
 odk create
+odk upgrade
 ```
 
 ## What Is ODK?
@@ -64,6 +65,12 @@ Create a project:
 odk create
 ```
 
+Upgrade ODK:
+
+```bash
+odk upgrade
+```
+
 ## Commands
 
 ### `odk doctor`
@@ -102,6 +109,8 @@ Odoo Developer Kit Doctor
 
 Environment ready!
 ```
+
+If a newer ODK release is available, `odk doctor` prints a warning and suggests `odk upgrade`.
 
 ### `odk create`
 
