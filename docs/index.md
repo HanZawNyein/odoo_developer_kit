@@ -136,6 +136,9 @@ Odoo Developer Kit Doctor
 [✓] uv
     Version: 0.11.21
 
+[✓] Docker
+    Version: 28.3.2
+
 [✓] PyCharm
     Version: 2026.1.4
 
@@ -241,6 +244,7 @@ ODK does **not** use `python -m venv`.
 Current checks:
 
 * `uv`
+* Docker
 * PyCharm
 * VS Code
 * PostgreSQL
@@ -259,6 +263,9 @@ Odoo Developer Kit Doctor
 
 [✓] uv
     Version: 0.11.21
+
+[✓] Docker
+    Version: 28.3.2
 
 [✓] PyCharm
     Version: 2026.1.4

@@ -71,6 +71,7 @@ odk create
 Checks:
 
 - `uv`
+- Docker
 - PyCharm
 - VS Code
 - PostgreSQL
@@ -83,6 +84,9 @@ Odoo Developer Kit Doctor
 
 [✓] uv
     Version: 0.8.4
+
+[✓] Docker
+    Version: 28.3.2
 
 [✓] PyCharm
     Version: 2026.1

@@ -13,6 +13,7 @@ ODK checks only the tools that are part of the supported Odoo workflow.
 | Tool | Detection |
 | --- | --- |
 | `uv` | `uv --version` |
+| Docker | `docker --version` |
 | Python | `python --version`, then `python3 --version` |
 | PyCharm | platform-specific app or command detection |
 | VS Code | `code --version` |
@@ -26,6 +27,9 @@ Odoo Developer Kit Doctor
 
 [✓] uv
     Version: 0.8.4
+
+[✓] Docker
+    Version: 28.3.2
 
 [✓] Python
     Version: 3.13.5

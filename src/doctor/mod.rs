@@ -1,3 +1,4 @@
+pub mod docker;
 pub mod postgres;
 pub mod pycharm;
 pub mod uv;
@@ -54,6 +55,7 @@ pub fn run() -> Result<()> {
 pub fn run_checks(platform: Platform) -> Vec<CheckResult> {
     vec![
         uv::check(platform),
+        docker::check(platform),
         pycharm::check(platform),
         vscode::check(platform),
         postgres::check(platform),

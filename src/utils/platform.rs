@@ -36,6 +36,11 @@ pub fn install_suggestion(tool: &str, platform: Platform) -> &'static str {
         ("uv", Platform::Windows) => {
             "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\""
         }
+        ("Docker", Platform::MacOs) => "brew install --cask docker",
+        ("Docker", Platform::Linux) => {
+            "Install Docker Engine from https://docs.docker.com/engine/install/"
+        }
+        ("Docker", Platform::Windows) => "winget install Docker.DockerDesktop",
         ("Python", Platform::MacOs) => "brew install python@3.13",
         ("Python", Platform::Linux) => "Install python3 with your system package manager",
         ("Python", Platform::Windows) => "winget install Python.Python.3.13",

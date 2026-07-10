@@ -8,4 +8,8 @@ fn parses_versions_from_command_output() {
         version_from_output("psql (PostgreSQL) 17.5"),
         Some("17.5".to_owned())
     );
+    assert_eq!(
+        version_from_output("Docker version 28.3.2, build 578ccf6"),
+        Some("28.3.2".to_owned())
+    );
 }
