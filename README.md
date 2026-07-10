@@ -164,7 +164,6 @@ project/
 ├── .vscode/
 ├── compose.yaml
 ├── Dockerfile
-├── .env
 ├── .gitignore
 ├── odoo_pg_pass
 ├── README.md

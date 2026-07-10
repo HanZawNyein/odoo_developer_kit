@@ -2,6 +2,8 @@ use odoo_developer_kit::create::template::TemplateRenderer;
 use odoo_developer_kit::create::{
     ProjectConfig, ProjectOptions, database_name_from_project, validate_python_version,
 };
+use std::fs;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn sample_config() -> ProjectConfig {
     ProjectConfig::from_options(ProjectOptions {
@@ -61,6 +63,24 @@ fn renders_docker_compose_template() {
 }
 
 #[test]
+fn render_project_does_not_create_env_files() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let unique = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("clock should be monotonic")
+        .as_nanos();
+    let temp_dir = std::env::temp_dir().join(format!("odk-render-{unique}"));
+    fs::create_dir_all(&temp_dir).expect("temp dir should be created");
+
+    renderer
+        .render_project(&sample_config(), &temp_dir)
+        .expect("project should render");
+
+    assert!(!temp_dir.join(".env").exists());
+    assert!(!temp_dir.join(".env.example").exists());
+}
+
+#[test]
 fn renders_dockerfile_template() {
     let renderer = TemplateRenderer::new().expect("templates should load");
     let rendered = renderer
@@ -80,7 +100,7 @@ fn renders_gitignore_template() {
 
     assert_eq!(
         rendered,
-        ".DS_Store\n.env\n.idea/workspace.xml\n.odoo-data/\n.venv/\ntarget/\n__pycache__/\n*.py[cod]\n*.egg-info/\ndist/\nbuild/\n\n.idea/\n.vscode/\nconfig/\nodoo.conf\nodoo_pg_pass\n"
+        ".DS_Store\n.idea/workspace.xml\n.odoo-data/\n.venv/\ntarget/\n__pycache__/\n*.py[cod]\n*.egg-info/\ndist/\nbuild/\n\n.idea/\n.vscode/\nconfig/\nodoo.conf\nodoo_pg_pass\n"
     );
 }
 

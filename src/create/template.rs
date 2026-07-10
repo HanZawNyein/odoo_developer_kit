@@ -35,11 +35,6 @@ impl TemplateRenderer {
         )?;
         add_template(
             &mut tera,
-            "env.tera",
-            include_str!("../../templates/env.tera"),
-        )?;
-        add_template(
-            &mut tera,
             "gitignore.tera",
             include_str!("../../templates/gitignore.tera"),
         )?;
@@ -95,7 +90,6 @@ impl TemplateRenderer {
 
     pub fn render_project(&self, config: &ProjectConfig, target: &Path) -> Result<(), OdkError> {
         let mut files = vec![
-            ("env.tera", PathBuf::from(".env")),
             ("gitignore.tera", PathBuf::from(".gitignore")),
             ("README.md.tera", PathBuf::from("README.md")),
             ("pyproject.toml.tera", PathBuf::from("pyproject.toml")),

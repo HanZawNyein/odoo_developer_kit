@@ -374,7 +374,6 @@ docs/
 src/
 templates/
 tests/
-.env
 install.sh
 mkdocs.yml
 ```

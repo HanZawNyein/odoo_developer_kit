@@ -88,7 +88,6 @@ project/
 ├── .vscode/
 ├── compose.yaml
 ├── Dockerfile
-├── .env
 ├── .gitignore
 ├── odoo.conf
 ├── README.md
