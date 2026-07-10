@@ -41,6 +41,8 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.path
+    - navigation.tabs.sticky
+    - navigation.tracking
     - navigation.sections
     - navigation.tabs
     - navigation.top
@@ -50,13 +52,23 @@ theme:
     - toc.follow
 
 nav:
-  - Overview: index.md
-  - Installation: installation.md
+  - Home:
+      - Overview: index.md
+  - Getting Started:
+      - Installation: installation.md
+      - Quickstart: quickstart.md
   - Commands:
       - Doctor: doctor.md
       - Create: create.md
-  - Release: release.md
-  - Publishing: publishing.md
+  - Guides:
+      - Generated Project Structure: project-structure.md
+      - Docker Development: docker.md
+      - Editor Support: editors.md
+      - Troubleshooting: troubleshooting.md
+  - Project:
+      - Development: development.md
+      - Release: release.md
+      - Publishing Documentation: publishing.md
 
 plugins:
   - search
