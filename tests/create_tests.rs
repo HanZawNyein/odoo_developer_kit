@@ -88,6 +88,28 @@ fn builds_project_config_from_create_command_options() {
 }
 
 #[test]
+fn command_options_can_default_docker_and_vscode_to_false() {
+    let config = prompt_project_config_with_options(CreateCommandOptions {
+        project_name: Some("burma".to_owned()),
+        project_path: Some("/Users/agga/Documents/python-dev/odoo-dev".to_owned()),
+        git_repository: Some("git@github.com:HanZawNyein/burma.git".to_owned()),
+        odoo_source_path: Some("/Users/agga/Documents/src/odoo19c".to_owned()),
+        odoo_version: Some("19.0".to_owned()),
+        python_version: Some("3.10".to_owned()),
+        postgres_version: None,
+        use_docker: Some(false),
+        generate_pycharm: Some(true),
+        generate_vscode: Some(false),
+    })
+    .expect("config should build from command options");
+
+    assert!(!config.use_docker);
+    assert!(config.generate_pycharm);
+    assert!(!config.generate_vscode);
+    assert_eq!(config.postgres_version, "17");
+}
+
+#[test]
 fn renders_odoo_conf_template() {
     let renderer = TemplateRenderer::new().expect("templates should load");
     let rendered = renderer

@@ -64,6 +64,7 @@ pub fn run() -> Result<()> {
     match cli.command {
         Commands::Doctor => crate::doctor::run(),
         Commands::Create(args) => {
+            let has_create_options = args.has_create_options();
             if args.doctor {
                 crate::doctor::run()?;
                 println!();
@@ -76,11 +77,34 @@ pub fn run() -> Result<()> {
                 odoo_version: args.odoo_version,
                 python_version: args.python_version,
                 postgres_version: args.postgres_version,
-                use_docker: args.docker.then_some(true),
-                generate_pycharm: args.pycharm.then_some(true),
-                generate_vscode: args.vscode.then_some(true),
+                use_docker: create_flag_value(has_create_options, args.docker),
+                generate_pycharm: create_flag_value(has_create_options, args.pycharm),
+                generate_vscode: create_flag_value(has_create_options, args.vscode),
             })
         }
         Commands::Upgrade => crate::upgrade::run(),
+    }
+}
+
+impl CreateArgs {
+    fn has_create_options(&self) -> bool {
+        self.project_name.is_some()
+            || self.project_path.is_some()
+            || self.git_repository.is_some()
+            || self.odoo_source_path.is_some()
+            || self.odoo_version.is_some()
+            || self.python_version.is_some()
+            || self.postgres_version.is_some()
+            || self.docker
+            || self.pycharm
+            || self.vscode
+    }
+}
+
+fn create_flag_value(has_create_options: bool, enabled: bool) -> Option<bool> {
+    if has_create_options {
+        Some(enabled)
+    } else {
+        enabled.then_some(true)
     }
 }

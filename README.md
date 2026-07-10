@@ -121,6 +121,7 @@ odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/
 ```
 
 `--doctor` runs `odk doctor` before creation. Missing required values are still prompted.
+In flag mode, omitted boolean flags such as `--docker` default to disabled.
 `--projec-path` is accepted as an alias for `--project-path`.
 
 ```text

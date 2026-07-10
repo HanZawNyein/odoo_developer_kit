@@ -302,7 +302,8 @@ It also accepts common values as flags:
 odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --pycharm --vscode --doctor
 ```
 
-`--doctor` runs `odk doctor` first. Missing required values are prompted, and
+`--doctor` runs `odk doctor` first. Missing required values are prompted. In flag
+mode, omitted boolean flags such as `--docker` default to disabled.
 `--projec-path` is accepted as an alias for `--project-path`.
 
 It asks for:
