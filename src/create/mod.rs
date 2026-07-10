@@ -2,6 +2,7 @@ pub mod git;
 pub mod project;
 pub mod template;
 
+use std::fs;
 use std::io::{self, Write};
 use std::path::Path;
 
@@ -90,8 +91,7 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let project_path = prompt_text_with_default("Project Path", &project_name)?;
     let git_repository = prompt_required("Git Repository")?;
     let odoo_source_path = prompt_required("Odoo Source Code Path")?;
-    let odoo_version =
-        prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)?;
+    let odoo_version = prompt_odoo_version(&odoo_source_path)?;
     let python_version =
         prompt_choice_with_default("Python Version", PYTHON_VERSIONS, DEFAULT_PYTHON_VERSION)?;
     let use_docker = prompt_yes_no("Use Docker")?;
@@ -137,6 +137,32 @@ pub fn validate_python_version(python_version: &str) -> Result<(), OdkError> {
 
 pub fn supported_python_versions() -> &'static [&'static str] {
     PYTHON_VERSIONS
+}
+
+pub fn detect_odoo_version_from_source(odoo_source_path: &str) -> Option<String> {
+    let release_path = Path::new(odoo_source_path.trim())
+        .join("odoo")
+        .join("release.py");
+    let release = fs::read_to_string(release_path).ok()?;
+    detect_odoo_version_from_release(&release)
+}
+
+fn detect_odoo_version_from_release(release: &str) -> Option<String> {
+    for line in release.lines() {
+        let line = line.trim();
+        if !line.starts_with("version_info") {
+            continue;
+        }
+
+        let (_, value) = line.split_once('=')?;
+        let tuple = value.trim().strip_prefix('(')?.split_once(')')?.0;
+        let mut parts = tuple.split(',').map(str::trim);
+        let major = parts.next()?.parse::<u16>().ok()?;
+        let minor = parts.next()?.parse::<u16>().ok()?;
+        return Some(format!("{major}.{minor}"));
+    }
+
+    None
 }
 
 pub fn database_name_from_project(project_name: &str) -> String {
@@ -223,6 +249,24 @@ fn prompt_choice_with_default(
     prompt_choice_inner(label, choices, Some(default))
 }
 
+fn prompt_odoo_version(odoo_source_path: &str) -> AnyhowResult<String> {
+    if let Some(version) = detect_odoo_version_from_source(odoo_source_path) {
+        if ODOO_VERSIONS.contains(&version.as_str()) {
+            println!("Odoo Version:");
+            println!("  {version} (detected)");
+            println!();
+            return Ok(version);
+        }
+
+        println!(
+            "{} detected unsupported Odoo version `{version}`.",
+            style("Warning:").yellow().bold()
+        );
+    }
+
+    prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)
+}
+
 fn prompt_choice_inner(
     label: &str,
     choices: &[&str],
@@ -292,9 +336,11 @@ fn prompt_yes_no(label: &str) -> AnyhowResult<bool> {
 #[cfg(test)]
 mod tests {
     use super::{
-        database_name_from_project, project_path_from_input, supported_python_versions,
-        validate_python_version,
+        database_name_from_project, detect_odoo_version_from_source, project_path_from_input,
+        supported_python_versions, validate_python_version,
     };
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     #[test]
     fn validates_python_compatibility() {
@@ -309,6 +355,27 @@ mod tests {
         assert_eq!(
             supported_python_versions(),
             &["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        );
+    }
+
+    #[test]
+    fn detects_odoo_version_from_source_path() {
+        let unique = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("clock should be monotonic")
+            .as_nanos();
+        let temp_dir = std::env::temp_dir().join(format!("odk-odoo-source-{unique}"));
+        let odoo_dir = temp_dir.join("odoo");
+        fs::create_dir_all(&odoo_dir).expect("odoo dir should be created");
+        fs::write(
+            odoo_dir.join("release.py"),
+            "RELEASE_LEVELS = [FINAL] = ['final']\nversion_info = (19, 0, 0, FINAL, 0, '')\n",
+        )
+        .expect("release file should be written");
+
+        assert_eq!(
+            detect_odoo_version_from_source(&temp_dir.to_string_lossy()),
+            Some("19.0".to_owned())
         );
     }
 

@@ -9,7 +9,7 @@ use crate::create::ProjectConfig;
 use crate::create::git;
 use crate::create::template::TemplateRenderer;
 use crate::error::OdkError;
-use crate::utils::command::run_required;
+use crate::utils::command::{run_command, run_required};
 
 pub fn create_project(config: &ProjectConfig) -> Result<PathBuf> {
     let target = absolute_path(&PathBuf::from(&config.project_path))?;
@@ -43,6 +43,26 @@ pub fn create_project(config: &ProjectConfig) -> Result<PathBuf> {
             run_required("uv", &args, Some(&target))
         },
     )?;
+
+    run_ignored_step(
+        "Installing Odoo requirements with uv",
+        Some(
+            odoo_requirements_path(&config.odoo_source_path)
+                .display()
+                .to_string(),
+        ),
+        || {
+            let args = vec![
+                "pip".to_owned(),
+                "install".to_owned(),
+                "-r".to_owned(),
+                odoo_requirements_path(&config.odoo_source_path)
+                    .display()
+                    .to_string(),
+            ];
+            run_command("uv", &args, Some(&target))
+        },
+    );
 
     create_project_directories(&target, config.use_docker)?;
 
@@ -92,6 +112,44 @@ where
             Err(error.into())
         }
     }
+}
+
+fn run_ignored_step<F>(message: &'static str, success_detail: Option<String>, action: F)
+where
+    F: FnOnce() -> Result<crate::utils::command::CommandOutput, OdkError>,
+{
+    let progress = ProgressBar::new_spinner();
+    progress.enable_steady_tick(Duration::from_millis(80));
+    progress.set_message(message.to_owned());
+
+    match action() {
+        Ok(output) if output.success() => {
+            let done_message = match success_detail {
+                Some(detail) => format!("{message} done - {detail}"),
+                None => format!("{message} done"),
+            };
+            progress.finish_with_message(done_message);
+        }
+        Ok(output) => {
+            progress.abandon_with_message(format!(
+                "{message} failed; continuing so dependencies can be fixed manually"
+            ));
+            let output_text = output.combined_output();
+            if !output_text.is_empty() {
+                eprintln!("{output_text}");
+            }
+        }
+        Err(error) => {
+            progress.abandon_with_message(format!(
+                "{message} failed; continuing so dependencies can be fixed manually"
+            ));
+            eprintln!("{error}");
+        }
+    }
+}
+
+fn odoo_requirements_path(odoo_source_path: &str) -> PathBuf {
+    PathBuf::from(odoo_source_path).join("requirements.txt")
 }
 
 fn absolute_path(path: &Path) -> Result<PathBuf, OdkError> {

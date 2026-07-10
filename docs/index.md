@@ -182,10 +182,7 @@ Odoo Source Code Path:
 > /Users/agga/src/odoo
 
 Odoo Version:
-  19.0 (default)
-  18.0
-  17.0
-> 19.0
+  19.0 (detected)
 
 Python Version:
   3.8
@@ -222,11 +219,12 @@ ODK then:
 1. Creates a clean project directory.
 2. Installs the selected Python version with `uv`.
 3. Creates `.venv` using `uv venv`.
-4. Generates Odoo project files from templates.
-5. Generates Docker files when selected.
-6. Generates PyCharm configuration when selected.
-7. Generates VS Code configuration when selected.
-8. Runs `uv lock`.
+4. Installs `<odoo_source_path>/requirements.txt` with `uv pip install -r`.
+5. Generates Odoo project files from templates.
+6. Generates Docker files when selected.
+7. Generates PyCharm configuration when selected.
+8. Generates VS Code configuration when selected.
+9. Runs `uv lock`.
 
 ODK does **not** use `python -m venv`.
 

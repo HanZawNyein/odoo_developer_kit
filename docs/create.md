@@ -14,7 +14,7 @@ The generator asks for the values that shape the project:
 2. Project Path
 3. Git Repository
 4. Odoo Source Code Path
-5. Odoo Version
+5. Odoo Version, detected from `odoo/release.py` when available
 6. Python Version
 7. PostgreSQL Version
 8. Use Docker
@@ -38,10 +38,7 @@ Odoo Source Code Path:
 > /Users/agga/src/odoo
 
 Odoo Version:
-  19.0
-  18.0
-  17.0
-> 19.0
+  19.0 (detected)
 
 Python Version:
   3.10
@@ -65,8 +62,9 @@ flowchart LR
     B --> C[Clone repository]
     C --> D[Install Python with uv]
     D --> E[Create .venv with uv]
-    E --> F[Render Tera templates]
-    F --> G[Generate uv.lock]
+    E --> F[Install Odoo requirements]
+    F --> G[Render Tera templates]
+    G --> H[Generate uv.lock]
 ```
 
 The environment is always created with `uv`:
@@ -74,7 +72,10 @@ The environment is always created with `uv`:
 ```bash
 uv python install <version>
 uv venv .venv --python <version>
+uv pip install -r <odoo_source_path>/requirements.txt
 ```
+
+Requirement installation failures are reported but do not stop project creation.
 
 !!! warning "No `python -m venv`"
     ODK deliberately avoids `python -m venv` so teams get one consistent Python environment workflow.

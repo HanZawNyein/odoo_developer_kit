@@ -133,10 +133,7 @@ Odoo Source Code Path:
 > /Users/agga/src/odoo
 
 Odoo Version:
-  19.0 (default)
-  18.0
-  17.0
-> 19.0
+  19.0 (detected)
 
 Python Version:
   3.10
@@ -166,9 +163,11 @@ ODK then:
 1. Clones the repository with `git clone`.
 2. Installs Python with `uv python install <version>`.
 3. Creates `.venv` with `uv venv .venv --python <version>`.
-4. Generates folders and project files from Tera templates.
-5. Generates PyCharm and VS Code configuration when selected.
-6. Runs `uv lock`.
+4. Installs Odoo requirements with `uv pip install -r <odoo_source_path>/requirements.txt`.
+   If requirement installation fails, ODK reports the error and continues so you can fix it manually.
+5. Generates folders and project files from Tera templates.
+6. Generates PyCharm and VS Code configuration when selected.
+7. Runs `uv lock`.
 
 ODK never uses `python -m venv`.
 
