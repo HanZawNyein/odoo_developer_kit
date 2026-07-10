@@ -116,6 +116,13 @@ If a newer ODK release is available, `odk doctor` prints a warning and suggests 
 
 Starts an interactive generator:
 
+```bash
+odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --pycharm --vscode --doctor
+```
+
+`--doctor` runs `odk doctor` before creation. Missing required values are still prompted.
+`--projec-path` is accepted as an alias for `--project-path`.
+
 ```text
 Odoo Project Creator
 

@@ -1,7 +1,7 @@
 use odoo_developer_kit::create::template::TemplateRenderer;
 use odoo_developer_kit::create::{
-    ProjectConfig, ProjectOptions, database_name_from_project, project_path_from_input,
-    validate_python_version,
+    CreateCommandOptions, ProjectConfig, ProjectOptions, database_name_from_project,
+    project_path_from_input, prompt_project_config_with_options, validate_python_version,
 };
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -58,6 +58,33 @@ fn appends_project_name_to_parent_path() {
         project_path_from_input("/Users/agga/Documents/python-dev/odoo-dev", "burma"),
         "/Users/agga/Documents/python-dev/odoo-dev/burma"
     );
+}
+
+#[test]
+fn builds_project_config_from_create_command_options() {
+    let config = prompt_project_config_with_options(CreateCommandOptions {
+        project_name: Some("burma".to_owned()),
+        project_path: Some("/Users/agga/Documents/python-dev/odoo-dev".to_owned()),
+        git_repository: None,
+        odoo_source_path: Some("/Users/agga/Documents/src/odoo19c".to_owned()),
+        odoo_version: Some("19.1".to_owned()),
+        python_version: Some("3.13".to_owned()),
+        postgres_version: Some("17".to_owned()),
+        use_docker: Some(true),
+        generate_pycharm: Some(true),
+        generate_vscode: Some(true),
+    })
+    .expect("config should build from command options");
+
+    assert_eq!(
+        config.project_path,
+        "/Users/agga/Documents/python-dev/odoo-dev/burma"
+    );
+    assert_eq!(config.git_repository, "");
+    assert_eq!(config.odoo_version, "19.1");
+    assert!(config.use_docker);
+    assert!(config.generate_pycharm);
+    assert!(config.generate_vscode);
 }
 
 #[test]

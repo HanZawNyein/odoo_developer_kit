@@ -48,6 +48,35 @@ pub struct ProjectOptions {
     pub generate_vscode: bool,
 }
 
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct CreateCommandOptions {
+    pub project_name: Option<String>,
+    pub project_path: Option<String>,
+    pub git_repository: Option<String>,
+    pub odoo_source_path: Option<String>,
+    pub odoo_version: Option<String>,
+    pub python_version: Option<String>,
+    pub postgres_version: Option<String>,
+    pub use_docker: Option<bool>,
+    pub generate_pycharm: Option<bool>,
+    pub generate_vscode: Option<bool>,
+}
+
+impl CreateCommandOptions {
+    fn has_any_value(&self) -> bool {
+        self.project_name.is_some()
+            || self.project_path.is_some()
+            || self.git_repository.is_some()
+            || self.odoo_source_path.is_some()
+            || self.odoo_version.is_some()
+            || self.python_version.is_some()
+            || self.postgres_version.is_some()
+            || self.use_docker.is_some()
+            || self.generate_pycharm.is_some()
+            || self.generate_vscode.is_some()
+    }
+}
+
 impl ProjectConfig {
     pub fn from_options(options: ProjectOptions) -> Result<Self, OdkError> {
         validate_python_version(&options.python_version)?;
@@ -71,10 +100,14 @@ impl ProjectConfig {
 }
 
 pub fn run() -> AnyhowResult<()> {
+    run_with_options(CreateCommandOptions::default())
+}
+
+pub fn run_with_options(options: CreateCommandOptions) -> AnyhowResult<()> {
     println!("{}", style("Odoo Project Creator").bold());
     println!();
 
-    let config = prompt_project_config()?;
+    let config = prompt_project_config_with_options(options)?;
     let path = project::create_project(&config)?;
 
     println!();
@@ -87,25 +120,66 @@ pub fn run() -> AnyhowResult<()> {
 }
 
 pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
-    let project_name = prompt_required("Project Name")?;
-    let project_path = prompt_text_with_default("Project Path", &project_name)?;
-    let git_repository = prompt_optional("Git Repository")?;
-    let odoo_source_path = prompt_required("Odoo Source Code Path")?;
-    let odoo_version = prompt_odoo_version(&odoo_source_path)?;
-    let python_version =
-        prompt_choice_with_default("Python Version", PYTHON_VERSIONS, DEFAULT_PYTHON_VERSION)?;
-    let use_docker = prompt_yes_no("Use Docker")?;
-    let postgres_version = if use_docker {
-        prompt_choice_with_default(
-            "PostgreSQL Version",
-            POSTGRES_VERSIONS,
-            DEFAULT_POSTGRES_VERSION,
-        )?
-    } else {
-        DEFAULT_POSTGRES_VERSION.to_owned()
+    prompt_project_config_with_options(CreateCommandOptions::default())
+}
+
+pub fn prompt_project_config_with_options(
+    options: CreateCommandOptions,
+) -> AnyhowResult<ProjectConfig> {
+    let has_cli_options = options.has_any_value();
+    let project_name = match options.project_name {
+        Some(project_name) => project_name,
+        None => prompt_required("Project Name")?,
     };
-    let generate_pycharm = prompt_yes_no("Generate PyCharm")?;
-    let generate_vscode = prompt_yes_no("Generate VS Code")?;
+    let project_path = match options.project_path {
+        Some(project_path) => project_path,
+        None => prompt_text_with_default("Project Path", &project_name)?,
+    };
+    let git_repository = match options.git_repository {
+        Some(git_repository) => git_repository,
+        None if has_cli_options => String::new(),
+        None => prompt_optional("Git Repository")?,
+    };
+    let odoo_source_path = match options.odoo_source_path {
+        Some(odoo_source_path) => odoo_source_path,
+        None => prompt_required("Odoo Source Code Path")?,
+    };
+    let odoo_version = match options.odoo_version {
+        Some(odoo_version) => odoo_version,
+        None => prompt_odoo_version(&odoo_source_path)?,
+    };
+    let python_version = match options.python_version {
+        Some(python_version) => python_version,
+        None => {
+            prompt_choice_with_default("Python Version", PYTHON_VERSIONS, DEFAULT_PYTHON_VERSION)?
+        }
+    };
+    let use_docker = match options.use_docker {
+        Some(use_docker) => use_docker,
+        None => prompt_yes_no("Use Docker")?,
+    };
+    let postgres_version = if use_docker {
+        match options.postgres_version {
+            Some(postgres_version) => postgres_version,
+            None => prompt_choice_with_default(
+                "PostgreSQL Version",
+                POSTGRES_VERSIONS,
+                DEFAULT_POSTGRES_VERSION,
+            )?,
+        }
+    } else {
+        options
+            .postgres_version
+            .unwrap_or_else(|| DEFAULT_POSTGRES_VERSION.to_owned())
+    };
+    let generate_pycharm = match options.generate_pycharm {
+        Some(generate_pycharm) => generate_pycharm,
+        None => prompt_yes_no("Generate PyCharm")?,
+    };
+    let generate_vscode = match options.generate_vscode {
+        Some(generate_vscode) => generate_vscode,
+        None => prompt_yes_no("Generate VS Code")?,
+    };
 
     let options = ProjectOptions {
         project_name,

@@ -6,6 +6,15 @@
 odk create
 ```
 
+You can also pass common answers as flags:
+
+```bash
+odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --pycharm --vscode --doctor
+```
+
+`--doctor` runs environment checks before creation. Missing required values are prompted.
+`--projec-path` is accepted as an alias for `--project-path`.
+
 ## Interactive Flow
 
 The generator asks for the values that shape the project:
@@ -88,7 +97,9 @@ major number. For example, Odoo `18.1` renders `FROM odoo:18.0`.
 
 | Odoo Version | Supported Python Versions |
 | --- | --- |
+| 19.1 | 3.12, 3.13 |
 | 19.0 | 3.12, 3.13 |
+| 18.1 | 3.11, 3.12 |
 | 18.0 | 3.11, 3.12 |
 | 17.0 | 3.11 |
 
