@@ -99,6 +99,7 @@ impl TemplateRenderer {
             files.push(("compose.yaml.tera", PathBuf::from("compose.yaml")));
             files.push(("Dockerfile.tera", PathBuf::from("Dockerfile")));
             files.push(("odoo.conf.tera", PathBuf::from("config/odoo.conf")));
+            files.push(("odoo.conf.tera", PathBuf::from("odoo.conf")));
             files.push(("odoo_pg_pass.tera", PathBuf::from("odoo_pg_pass")));
         } else {
             files.push(("odoo.conf.tera", PathBuf::from("odoo.conf")));

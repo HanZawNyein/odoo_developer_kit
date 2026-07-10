@@ -334,6 +334,7 @@ project/
 ├── .vscode/
 ├── compose.yaml
 ├── Dockerfile
+├── odoo.conf
 ├── .gitignore
 ├── odoo_pg_pass
 ├── README.md
@@ -390,6 +391,7 @@ When Docker is enabled, ODK generates:
 compose.yaml
 Dockerfile
 config/odoo.conf
+odoo.conf
 odoo_pg_pass
 ```
 

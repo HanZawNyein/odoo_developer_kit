@@ -89,8 +89,8 @@ project/
 ├── .vscode/
 ├── compose.yaml
 ├── Dockerfile
-├── .gitignore
 ├── odoo.conf
+├── .gitignore
 ├── README.md
 ├── pyproject.toml
 └── uv.lock

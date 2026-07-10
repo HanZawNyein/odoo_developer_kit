@@ -82,6 +82,24 @@ fn render_project_does_not_create_env_files() {
 }
 
 #[test]
+fn render_project_with_docker_creates_both_odoo_conf_files() {
+    let renderer = TemplateRenderer::new().expect("templates should load");
+    let unique = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("clock should be monotonic")
+        .as_nanos();
+    let temp_dir = std::env::temp_dir().join(format!("odk-docker-render-{unique}"));
+    fs::create_dir_all(&temp_dir).expect("temp dir should be created");
+
+    renderer
+        .render_project(&sample_config(), &temp_dir)
+        .expect("project should render");
+
+    assert!(temp_dir.join("config/odoo.conf").exists());
+    assert!(temp_dir.join("odoo.conf").exists());
+}
+
+#[test]
 fn renders_dockerfile_template() {
     let renderer = TemplateRenderer::new().expect("templates should load");
     let rendered = renderer
