@@ -60,8 +60,28 @@ impl TemplateRenderer {
         )?;
         add_template(
             &mut tera,
+            "idea/gitignore.tera",
+            include_str!("../../templates/idea/gitignore.tera"),
+        )?;
+        add_template(
+            &mut tera,
+            "idea/module.iml.tera",
+            include_str!("../../templates/idea/module.iml.tera"),
+        )?;
+        add_template(
+            &mut tera,
             "idea/modules.xml.tera",
             include_str!("../../templates/idea/modules.xml.tera"),
+        )?;
+        add_template(
+            &mut tera,
+            "idea/vcs.xml.tera",
+            include_str!("../../templates/idea/vcs.xml.tera"),
+        )?;
+        add_template(
+            &mut tera,
+            "idea/inspectionProfiles/profiles_settings.xml.tera",
+            include_str!("../../templates/idea/inspectionProfiles/profiles_settings.xml.tera"),
         )?;
         add_template(
             &mut tera,
@@ -111,8 +131,18 @@ impl TemplateRenderer {
         }
 
         if config.generate_pycharm {
+            files.push(("idea/gitignore.tera", PathBuf::from(".idea/.gitignore")));
             files.push(("idea/misc.xml.tera", PathBuf::from(".idea/misc.xml")));
             files.push(("idea/modules.xml.tera", PathBuf::from(".idea/modules.xml")));
+            files.push((
+                "idea/module.iml.tera",
+                PathBuf::from(format!(".idea/{}.iml", config.project_name)),
+            ));
+            files.push(("idea/vcs.xml.tera", PathBuf::from(".idea/vcs.xml")));
+            files.push((
+                "idea/inspectionProfiles/profiles_settings.xml.tera",
+                PathBuf::from(".idea/inspectionProfiles/profiles_settings.xml"),
+            ));
             files.push((
                 "idea/runConfigurations/odoo.xml.tera",
                 PathBuf::from(".idea/runConfigurations/odoo.xml"),

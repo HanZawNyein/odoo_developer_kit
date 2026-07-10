@@ -124,7 +124,7 @@ Project Name:
 
 Project Path:
   sample (default)
-> /Users/agga/Documents/python-dev/odoo-dev/sample
+> /Users/agga/Documents/python-dev/odoo-dev
 
 Git Repository:
 > git@github.com:company/template.git
@@ -156,6 +156,10 @@ PostgreSQL Version:
   16
 > 17
 ```
+
+The project path is a parent directory. In this example, ODK creates the project at
+`/Users/agga/Documents/python-dev/odoo-dev/sample`. You may also enter the complete
+project path; ODK does not append the project name twice.
 
 ODK then:
 

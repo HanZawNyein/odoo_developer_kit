@@ -173,7 +173,7 @@ Project Name:
 
 Project Path:
   sample (default)
-> /Users/agga/Documents/python-dev/odoo-dev/sample
+> /Users/agga/Documents/python-dev/odoo-dev
 
 Git Repository:
 > 
@@ -213,6 +213,9 @@ Generate VS Code:
   yes/no
 > yes
 ```
+
+The project path is the parent directory, so this example creates
+`/Users/agga/Documents/python-dev/odoo-dev/sample`.
 
 ODK then:
 
@@ -441,19 +444,16 @@ http://localhost:8069
 
 When PyCharm generation is enabled, ODK creates `.idea` configuration files.
 
-The generated PyCharm run configuration points to:
+The generated PyCharm run configuration uses the generated `uv` environment and
+points to the Odoo source path entered during project creation. It runs:
 
 ```text
-$PROJECT_DIR$/.venv/bin/python
+<Odoo Source Code Path>/odoo-bin -c $PROJECT_DIR$/odoo.conf
 ```
 
-and runs:
-
-```text
-$PROJECT_DIR$/odoo-bin -c odoo.conf
-```
-
-This works best when your project layout has `odoo-bin` at the project root.
+ODK also generates the project module, VCS mapping, inspection profile, Black SDK,
+and shared run configuration. Session-specific `workspace.xml` remains ignored and
+is created by PyCharm when needed.
 
 ---
 

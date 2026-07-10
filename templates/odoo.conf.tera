@@ -1,3 +1,5 @@
 [options]
 addons_path = {{ odoo_source_path }}/addons,{{ project_path }}/addons
 admin_passwd = admin
+db_user=odoo
+db_password=odoo

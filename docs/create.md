@@ -11,20 +11,25 @@ odk create
 The generator asks for the values that shape the project:
 
 1. Project Name
-2. Git Repository
-3. Odoo Source Code Path
-4. Odoo Version
-5. Python Version
-6. PostgreSQL Version
-7. Use Docker
-8. Generate PyCharm
-9. Generate VS Code
+2. Project Path
+3. Git Repository
+4. Odoo Source Code Path
+5. Odoo Version
+6. Python Version
+7. PostgreSQL Version
+8. Use Docker
+9. Generate PyCharm
+10. Generate VS Code
 
 ```text
 Odoo Project Creator
 
 Project Name:
 > geaai_odoo
+
+Project Path:
+  geaai_odoo (default)
+> /Users/agga/Documents/python-dev/odoo-dev
 
 Git Repository:
 > git@github.com:company/template.git
@@ -45,6 +50,10 @@ Python Version:
   3.13
 > 3.10
 ```
+
+`Project Path` accepts the parent directory. For the values above, the generated
+project directory is `/Users/agga/Documents/python-dev/odoo-dev/geaai_odoo`.
+Entering a complete path that already ends with the project name is also supported.
 
 ## Workflow
 
@@ -119,9 +128,9 @@ When selected, ODK generates editor configuration that points to `.venv`.
 === "PyCharm"
 
     ```text
-    Script: odoo-bin
-    Arguments: -c odoo.conf
-    Interpreter: .venv
+    Script: <Odoo Source Code Path>/odoo-bin
+    Arguments: -c $PROJECT_DIR$/odoo.conf
+    Interpreter: uv (<Project Name>)
     ```
 
 === "VS Code"

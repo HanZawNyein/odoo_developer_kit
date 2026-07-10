@@ -24,6 +24,6 @@ The create command asks for:
 7. Docker preference
 8. Editor configuration preferences
 
-For local development, ODK writes root `odoo.conf` with an `addons_path` built from the Odoo source checkout and the generated project `addons/` directory.
+For local development, ODK writes root `odoo.conf` with an `addons_path` built from the Odoo source checkout and the generated project `addons/` directory. It also sets `admin_passwd = admin`, `db_user=odoo`, and `db_password=odoo`.
 
 For Docker development, ODK also writes `config/odoo.conf` for the container.

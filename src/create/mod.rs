@@ -3,6 +3,7 @@ pub mod project;
 pub mod template;
 
 use std::io::{self, Write};
+use std::path::Path;
 
 use anyhow::Result as AnyhowResult;
 use console::style;
@@ -162,10 +163,17 @@ pub fn database_name_from_project(project_name: &str) -> String {
 
 pub fn project_path_from_input(project_path: &str, project_name: &str) -> String {
     let trimmed = project_path.trim();
+    let project_name = project_name.trim();
+
     if trimmed.is_empty() {
-        project_name.trim().to_owned()
-    } else {
+        return project_name.to_owned();
+    }
+
+    let path = Path::new(trimmed);
+    if path.file_name().is_some_and(|name| name == project_name) {
         trimmed.to_owned()
+    } else {
+        path.join(project_name).to_string_lossy().into_owned()
     }
 }
 
@@ -314,8 +322,20 @@ mod tests {
     }
 
     #[test]
-    fn defaults_project_path_to_project_name() {
+    fn resolves_project_path_from_parent_directory() {
         assert_eq!(project_path_from_input("", "sample"), "sample".to_owned());
+        assert_eq!(
+            project_path_from_input("sample", "sample"),
+            "sample".to_owned()
+        );
+        assert_eq!(
+            project_path_from_input("projects", "sample"),
+            "projects/sample".to_owned()
+        );
+        assert_eq!(
+            project_path_from_input(" /Users/agga/Documents/python-dev/odoo-dev ", "sample"),
+            "/Users/agga/Documents/python-dev/odoo-dev/sample".to_owned()
+        );
         assert_eq!(
             project_path_from_input(
                 " /Users/agga/Documents/python-dev/odoo-dev/sample ",
