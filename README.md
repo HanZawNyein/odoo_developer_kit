@@ -123,12 +123,12 @@ Odoo Version:
 > 19.0
 
 Python Version:
-  3.8
-  3.9
   3.10
-  3.11
-  3.12
   3.13
+  3.12
+  3.11
+  3.9
+  3.8
 > 3.10
 
 Use Docker:

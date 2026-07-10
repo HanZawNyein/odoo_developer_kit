@@ -57,6 +57,7 @@ fn renders_docker_compose_template() {
     assert!(rendered.contains("web:"));
     assert!(rendered.contains("dockerfile: Dockerfile"));
     assert!(rendered.contains("./config:/etc/odoo"));
+    assert!(!rendered.contains("./addons:/mnt/extra-addons"));
     assert!(rendered.contains("image: postgres:17"));
     assert!(rendered.contains("POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password"));
     assert!(rendered.contains("file: odoo_pg_pass"));

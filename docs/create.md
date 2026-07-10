@@ -35,10 +35,11 @@ Odoo Version:
 > 19.0
 
 Python Version:
-  3.13
+  3.10
   3.12
   3.11
-> 3.13
+  3.13
+> 3.10
 ```
 
 ## Workflow

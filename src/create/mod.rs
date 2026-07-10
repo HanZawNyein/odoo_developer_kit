@@ -14,6 +14,7 @@ const ODOO_VERSIONS: &[&str] = &["19.0", "18.0", "17.0"];
 const PYTHON_VERSIONS: &[&str] = &["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"];
 const POSTGRES_VERSIONS: &[&str] = &["17", "16"];
 const DEFAULT_ODOO_VERSION: &str = "19.0";
+const DEFAULT_PYTHON_VERSION: &str = "3.10";
 const DEFAULT_POSTGRES_VERSION: &str = "17";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -86,7 +87,8 @@ pub fn prompt_project_config() -> AnyhowResult<ProjectConfig> {
     let git_repository = prompt_required("Git Repository")?;
     let odoo_version =
         prompt_choice_with_default("Odoo Version", ODOO_VERSIONS, DEFAULT_ODOO_VERSION)?;
-    let python_version = prompt_choice("Python Version", PYTHON_VERSIONS)?;
+    let python_version =
+        prompt_choice_with_default("Python Version", PYTHON_VERSIONS, DEFAULT_PYTHON_VERSION)?;
     let use_docker = prompt_yes_no("Use Docker")?;
     let postgres_version = if use_docker {
         prompt_choice_with_default(
@@ -197,10 +199,6 @@ fn prompt_text_with_default(label: &str, default: &str) -> AnyhowResult<String> 
     } else {
         Ok(value.to_owned())
     }
-}
-
-fn prompt_choice(label: &str, choices: &[&str]) -> AnyhowResult<String> {
-    prompt_choice_inner(label, choices, None)
 }
 
 fn prompt_choice_with_default(
