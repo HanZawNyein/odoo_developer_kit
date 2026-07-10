@@ -9,11 +9,12 @@ odk create
 You can also pass common answers as flags:
 
 ```bash
-odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --pycharm --vscode --doctor
+odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --psql=17 --pycharm --vscode --doctor
 ```
 
 `--doctor` runs environment checks before creation. Missing required values are prompted.
 In flag mode, omitted boolean flags such as `--docker` default to disabled.
+`--postgres-version` and `--psql` are only valid with `--docker`.
 `--projec-path` is accepted as an alias for `--project-path`.
 
 ## Interactive Flow

@@ -42,7 +42,7 @@ struct CreateArgs {
     #[arg(long)]
     python_version: Option<String>,
     /// PostgreSQL Docker image version.
-    #[arg(long)]
+    #[arg(long, alias = "psql", requires = "docker")]
     postgres_version: Option<String>,
     /// Generate Docker files.
     #[arg(long)]

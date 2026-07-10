@@ -299,11 +299,12 @@ If a newer ODK release is available, `odk doctor` prints a warning and suggests 
 It also accepts common values as flags:
 
 ```bash
-odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --pycharm --vscode --doctor
+odk create --project-name burma --project-path=/Users/agga/Documents/python-dev/odoo-dev --docker --psql=17 --pycharm --vscode --doctor
 ```
 
 `--doctor` runs `odk doctor` first. Missing required values are prompted. In flag
 mode, omitted boolean flags such as `--docker` default to disabled.
+`--postgres-version` and `--psql` are only valid with `--docker`.
 `--projec-path` is accepted as an alias for `--project-path`.
 
 It asks for:
